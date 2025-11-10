@@ -1,0 +1,220 @@
+/* ==============================
+    TELA ADICIONAR FILMES
+    ============================== */
+
+.tela-adicionar-filmes {
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* CONTAINER PRINCIPAL */
+.formulario-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 5rem 4rem 8rem;
+  background-color: #062f44;
+  border-bottom-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+  position: relative;
+  z-index: 2;
+
+  /* --- AJUSTADO --- 
+     Muda de 'flex-start' para 'center' 
+     para alinhar verticalmente o formulário e a imagem. */
+  align-items: center;
+}
+
+/* CONTEÚDO DO FORMULÁRIO */
+.formulario-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  flex: 1 1 500px;
+  max-width: 550px;
+}
+
+.formulario-conteudo h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* FORM */
+.form-filme {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* CAMPOS */
+.campo {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.campo label {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  position: relative;
+}
+
+/* Cria o asterisco com CSS sem usar span */
+.campo label::after {
+  content: " *";
+  color: #6b2b2b;
+  font-weight: bold;
+}
+
+.campo input,
+.campo textarea {
+  width: 100%;
+  border: 2px solid #c8a59c;
+  border-radius: 25px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  outline: none;
+  color: #333;
+  background-color: #ffffff;
+  transition: border-color 0.3s;
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.campo textarea {
+  resize: none;
+  height: 110px;
+  border-radius: 15px;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+  border-color: #6b2b2b;
+}
+
+/* ILUSTRAÇÃO E BOTÃO */
+.imagem-diretor-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1 1 350px;
+  margin-top: 2rem;
+}
+
+.imagem-diretor-section img {
+  /* --- AJUSTADO --- 
+     Aumentado de 330px para 450px */
+  max-width: 450px;
+  height: auto;
+  margin-bottom: 3rem;
+}
+
+.btn-enviar {
+  background-color: #6b2b2b;
+  color: #ffffff;
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-weight: 600;
+
+  /* --- AJUSTADO --- 
+     Padding e font-size aumentados */
+  padding: 20px 80px;
+  font-size: 1.2rem;
+}
+
+.btn-enviar:hover {
+  background-color: #8c3b3b;
+  transform: scale(1.05);
+}
+
+/* CURVA DE TRANSIÇÃO */
+.curva-divisoria {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-top: -4rem;
+  background-color: transparent;
+  z-index: 1;
+}
+
+.curva-divisoria svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.form-mensagem {
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 500;
+}
+.form-erro {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+.form-sucesso {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 1000px) {
+  .formulario-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem 6rem;
+  }
+
+  .formulario-conteudo {
+    max-width: 500px;
+  }
+
+  .imagem-diretor-section {
+    margin-top: 3rem;
+  }
+
+  .imagem-diretor-section img {
+    /* --- AJUSTADO --- 
+       Mantido um tamanho maior para tablet */
+    max-width: 350px;
+  }
+
+  .curva-divisoria {
+    height: 150px;
+  }
+}
+
+@media (max-width: 600px) {
+  .btn-enviar {
+    width: 100%;
+    padding: 16px 0; /* Padding ajustado para mobile */
+    font-size: 1.1rem;
+  }
+
+  .imagem-diretor-section img {
+    max-width: 260px;
+  }
+}

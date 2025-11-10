@@ -1,0 +1,42 @@
+.card-filme {
+  background-color: #0d405a;
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: center;
+  padding-bottom: 1rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-filme:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-imagem {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+
+.card-titulo {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.card-botao {
+  background-color: #e1b287;
+  color: #000;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card-botao:hover {
+  background-color: #f0c299;
+}

@@ -1,0 +1,22 @@
+.secao-filmes {
+  padding: 3rem 5rem;
+  background-color: #062f44;
+  color: #ffffff;
+}
+
+.secao-titulo {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.lista-filmes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.mensagem-vazia {
+  color: #c8a59c;
+  font-size: 1rem;
+}

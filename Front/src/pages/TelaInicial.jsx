@@ -1,173 +1,117 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import '../style/style_pages/TelaInicial.css'; // Vamos criar este arquivo CSS
+import React, { useState, useEffect } from "react";
+// Importe o 'Link' para fazer os botões navegarem
+import { Link } from "react-router-dom"; 
+import "../style/style_pages/TelaInicial.css";
+import imagemInicial from "../assets/mulher_pagina_inicial.png";
+import imagemForm from "../assets/Imagem_tela _inicial_forms.png";
+// Imports de 'personagem', 'garota', 'avatar' não estão sendo usados
+// import personagem from "../assets/Imagem_adm.png";
+// import garota from "../assets/imagem_titanic.png";
+// import avatar from "../assets/imagem_lobo_wall_streats.png";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 
-// Importe seus ícones e imagens (ex: react-icons)
-// Por agora, usarei placeholders de texto (LOGO, 👤, 🔍)
-// import { FaUser, FaSearch, FaFacebookF, FaInstagram } from 'react-icons/fa';
-
-/**
- * Componente funcional para a Tela Inicial (Homepage).
- * Exibe o hero, uma lista de filmes populares (buscados do backend)
- * e um CTA para sugestão de filmes.
- */
-function TelaInicial() {
-  // --- Estados ---
+export default function TelaInicial() {
+  // --- CONEXÃO COM O BACKEND (INÍCIO) ---
+  
+  // Criamos um 'estado' para guardar os filmes que vêm do backend
   const [filmes, setFilmes] = useState([]);
   const [error, setError] = useState(null);
 
-  // --- Efeito de Carregamento (Data Fetching) ---
+  // 'useEffect' roda o código uma vez, quando o componente carrega
   useEffect(() => {
-    /**
-     * Busca os filmes da API backend.
-     * Baseado em 'handle_get_all_filmes'.
-     */
+    // Criamos uma função para buscar os dados
     const fetchFilmes = async () => {
       try {
+        // Faz a requisição GET para a rota do seu backend
         const response = await fetch('http://localhost:8000/filmes');
+        
         if (!response.ok) {
-          throw new Error('Falha ao buscar dados dos filmes.');
+          throw new Error('Falha ao buscar filmes do servidor.');
         }
+        
         const data = await response.json();
-        // O protótipo mostra 4 filmes; pegamos os 4 primeiros da lista
-        setFilmes(data.slice(0, 4));
+        // Pegamos apenas os 4 primeiros filmes para esta seção
+        setFilmes(data.slice(0, 4)); 
+
       } catch (err) {
         setError(err.message);
         console.error("Erro ao buscar filmes:", err);
       }
     };
 
-    fetchFilmes();
-  }, []); // O array vazio [] garante que isso rode apenas uma vez
+    fetchFilmes(); // Executa a função
+  }, []); // O array vazio [] faz com que isso rode só uma vez
 
-  /**
-   * Renderiza a grade de filmes ou mensagens de erro/carregamento.
-   */
-  const renderMovieGrid = () => {
-    if (error) {
-      return <p className="error-message">Erro ao carregar filmes: {error}</p>;
-    }
-    if (filmes.length === 0) {
-      return <p>Carregando filmes...</p>;
-    }
-    return (
-      <div className="movie-grid">
-        {filmes.map((filme) => (
-          <article key={filme.id} className="movie-card" aria-labelledby={`filme-titulo-${filme.id}`}>
-            <img src={filme.poster_url} alt={`Pôster do filme ${filme.titulo}`} className="movie-poster" />
-            <h3 id={`filme-titulo-${filme.id}`} className="movie-card-title">{filme.titulo}</h3>
-            {/* O link leva para a TelaDetalhes, conforme seu App.jsx */}
-            <Link to={`/filmes/${filme.id}`} className="cta-button-small">
-              Acessar
-            </Link>
-          </article>
-        ))}
-      </div>
-    );
-  };
+  // --- CONEXÃO COM O BACKEND (FIM) ---
 
-  // --- Renderização do JSX ---
   return (
-    <div className="tela-inicial-container">
-      {/* Bloco: Header
-        Cabeçalho principal do site com navegação e busca.
-      */}
-      <header className="home-header" role="banner">
-        <div className="logo">
-          <Link to="/">LOGO</Link>
-        </div>
-        <nav className="main-nav" role="navigation" aria-label="Navegação principal">
-          <Link to="/">Home</Link>
-          <Link to="/filmes">Filmes</Link>
-        </nav>
-        <form className="search-bar" role="search">
-          <input
-            type="search"
-            placeholder="Buscar filmes..."
-            aria-label="Campo de busca de filmes"
-          />
-          <button type="submit" aria-label="Buscar">
-            Buscar {/* Substitua por ícone 🔍 */}
-          </button>
-        </form>
-        <div className="user-profile">
-          <Link to="/login" aria-label="Acessar perfil ou fazer login">
-            👤 {/* Substitua por ícone FaUser */}
+    <div className="tela-inicial">
+      {/* HEADER FIXO */}
+      <Header />
+
+      {/* SEÇÃO 1 - Apresentação */}
+      <section className="hero-section">
+        <div className="texto-hero">
+          <h2>ACESSE NOSSA LISTA COMPLETA DE FILMES</h2>
+          {/* O botão agora é um Link que leva para a página de filmes */}
+          <Link to="/filmes" className="btn-primario">
+            Filmes
           </Link>
         </div>
-      </header>
-
-      {/* Bloco: Main Content
-        Contém todo o conteúdo principal da página.
-      */}
-      <main role="main">
-        {/* Seção: Hero
-          Principal chamada para ação da página.
-        */}
-        <section className="hero-section" aria-labelledby="hero-title">
-          <div className="hero-content">
-            <h1 id="hero-title">ACESSE NOSSA LISTA COMPLETA DE FILMES</h1>
-            <Link to="/filmes" className="cta-button hero-button">
-              Filmes
-            </Link>
-          </div>
-          <div className="hero-illustration">
-            {/*  */}
-            {/* Imagem de ilustração (placeholder) */}
-            <div className="placeholder-image" aria-hidden="true"></div>
-          </div>
-        </section>
-
-        {/* Seção: Filmes Mais Populares
-          Exibe 4 filmes buscados da API.
-        */}
-        <section className="popular-movies" aria-labelledby="popular-title">
-          <h2 id="popular-title">FILMES MAIS POPULARES</h2>
-          {renderMovieGrid()}
-        </section>
-
-        {/* Seção: CTA de Sugestões
-          Chamada para o usuário enviar sugestões de filmes.
-        */}
-        <section className="suggestion-cta" aria-labelledby="suggestion-title">
-          <div className="suggestion-content">
-            <h2 id="suggestion-title">AGORA VOCÊ PODE ENVIAR SUGESTÕES DE FILMES!!!</h2>
-            <p>Acesse o formulário abaixo e envie o filme que gostaria de ver na plataforma!</p>
-            {/* Link para a rota /admin/adicionar-filme, conforme seu App.jsx */}
-            <Link to="/admin/adicionar-filme" className="cta-button-dark">
-              Acesse o formulário
-            </Link>
-          </div>
-          <div className="suggestion-illustration">
-            {/*  */}
-            {/* Imagem de ilustração (placeholder) */}
-            <div className="placeholder-image" aria-hidden="true"></div>
-          </div>
-        </section>
-      </main>
-
-      {/* Bloco: Footer
-        Rodapé do site com links sociais e "Sobre Nós".
-      */}
-      <footer className="home-footer" role="contentinfo">
-        <div className="logo">
-          <Link to="/">LOGO</Link>
+        <div className="img-hero">
+          <img src={imagemInicial} alt="Imagem inicial" />
         </div>
-        <div className="footer-links">
-          <a href="/sobre-nos">Sobre Nós</a>
-          {/* Adicione mais links se necessário */}
+      </section>
+
+      {/* SEÇÃO 2 - Filmes populares (AGORA DINÂMICO) */}
+      <section className="populares-section">
+        <h3>FILMES MAIS POPULARES</h3>
+        <div className="lista-filmes">
+          
+          {/* Se der erro, mostramos a mensagem */}
+          {error && <p>Erro ao carregar filmes: {error}</p>}
+          
+          {/* Se não der erro, usamos .map() para criar os cards */}
+          {!error && filmes.map((filme) => (
+            <div className="card-filme" key={filme.id}>
+              {/* Usamos a poster_url do backend */}
+              <img 
+                src={filme.poster_url} 
+                alt={`Pôster do filme ${filme.titulo}`} 
+                className="card-filme-poster" // Adicionei uma classe
+              />
+              <h4>{filme.titulo}</h4>
+              {/* O botão agora é um Link para a página de detalhes do filme */}
+              <Link to={`/filmes/${filme.id}`} className="btn-card-acessar">
+                Acessar
+              </Link>
+            </div>
+          ))}
+
         </div>
-        <div className="social-icons" aria-label="Links de redes sociais">
-          <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-            {/* <FaFacebookF /> */} F
-          </a>
-          <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-            {/* <FaInstagram /> */} I
-          </a>
+      </section>
+
+      {/* SEÇÃO 3 - Sugestões */}
+      <section className="sugestoes-section">
+        <div className="texto-sugestoes">
+          <h3>AGORA VOCÊ PODE ENVIAR SUGESTÕES DE FILMES!!!</h3>
+          <p>
+            Acesse o formulário abaixo e envie o filme que gostaria de ver na
+            plataforma!
+          </p>
+          {/* O botão agora é um Link para o formulário de adição */}
+          <Link to="/admin/adicionar-filme" className="btn-secundario">
+            Acesse o formulário
+          </Link>
         </div>
-      </footer>
+        <div className="img-sugestoes">
+          <img src={imagemForm} alt="Ilustração" />
+        </div>
+      </section>
+      
+      {/* FOOTER */}
+      <Footer />
     </div>
   );
 }
-
-export default TelaInicial;

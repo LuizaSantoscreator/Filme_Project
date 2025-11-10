@@ -1,0 +1,68 @@
+/* ==============================
+   FOOTER - RODAPÉ
+   ============================== */
+
+.footer {
+  background-color: #062f44;
+  color: #ffffff;
+  padding: 2rem 1rem;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* LOGO */
+.footer-logo a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* LINKS */
+.footer-links a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #f0c08f;
+}
+
+/* REDES SOCIAIS */
+.footer-social {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-social a {
+  color: #ffffff;
+  transition: color 0.3s;
+}
+
+.footer-social a:hover {
+  color: #f0c08f;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-social {
+    justify-content: center;
+  }
+}

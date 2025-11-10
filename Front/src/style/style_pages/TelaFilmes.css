@@ -1,0 +1,72 @@
+.tela-filmes {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #062f44;
+  font-family: "Poppins", sans-serif;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* --- BANNER PRINCIPAL --- */
+.banner-filme {
+  position: relative;
+  height: 80vh;
+  background: url("/src/assets/imagem_titanic.png") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 5rem;
+}
+
+.banner-secundario {
+  background: url("/src/assets/imagem_lobo_wall_streats.png") center/cover
+    no-repeat;
+}
+
+.banner-filme .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 47, 68, 0.65);
+}
+
+.conteudo-banner {
+  position: relative;
+  max-width: 600px;
+  z-index: 2;
+}
+
+.conteudo-banner h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.descricao-banner {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.btn-principal {
+  background-color: #e1b287;
+  color: #000;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-principal:hover {
+  background-color: #f0c299;
+}
+
+.mensagem-erro {
+  text-align: center;
+  color: #ff6b6b;
+  margin-top: 2rem;
+}

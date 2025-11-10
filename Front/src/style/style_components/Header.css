@@ -1,0 +1,108 @@
+/* ==============================
+   NAVBAR - Estilo Principal
+   ============================== */
+
+.navbar {
+  width: 100%;
+  background-color: #062f44;
+  color: #fff;
+  padding: 0.8rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* LOGO */
+.navbar-logo a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* LINKS */
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navbar-links a:hover {
+  color: #f0c08f;
+}
+
+/* PESQUISA */
+.navbar-search {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 2px 4px;
+}
+
+.navbar-search input {
+  border: none;
+  outline: none;
+  padding: 6px 10px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+}
+
+.navbar-search button {
+  background-color: #f0c08f;
+  border: none;
+  border-radius: 25px;
+  padding: 6px 14px;
+  margin-left: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.navbar-search button:hover {
+  background-color: #ffb565;
+}
+
+/* MENU (para responsividade futura) */
+.navbar-menu {
+  display: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-menu {
+    display: block;
+    color: #fff;
+  }
+
+  .navbar-search {
+    margin-top: 0.5rem;
+  }
+
+  .navbar-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

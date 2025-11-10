@@ -1,0 +1,216 @@
+/*
+ * Arquivo: TelaCadastro.css
+ * Descrição: Estilos para o componente TelaCadastro.
+ * Baseado nos estilos de login para manter consistência visual.
+ */
+
+/* Variáveis (assumindo que são globais ou copie as do login) */
+:root {
+  --primary-color: #7b2c3d;
+  --text-color: #333;
+  --placeholder-color: #aaa;
+  --border-color: #ddd;
+  --background-dark: #1a2a3a;
+  --card-background: #fff;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --spacing-unit: 16px;
+  --error-color: #d9534f;
+  --error-bg: #f2dede;
+  --success-color: #3c763d; /* Verde para sucesso */
+  --success-bg: #dff0d8;   /* Fundo verde claro */
+}
+
+/* Garante que o body ocupe a tela */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--text-color);
+}
+
+/* Container principal */
+.cadastro-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--spacing-unit);
+  box-sizing: border-box;
+}
+
+/* Card de cadastro */
+.cadastro-card {
+  display: flex;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  width: 100%;
+  max-width: 900px;
+  min-height: 500px;
+}
+
+/* Seção da imagem (lado esquerdo) */
+.cadastro-image-section {
+  flex: 1;
+  background-color: #f0f0f0; /* Cor de fundo provisória */
+  min-width: 300px;
+}
+
+/* Seção do formulário (lado direito) */
+.cadastro-form-section {
+  flex: 1;
+  padding: calc(2 * var(--spacing-unit));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Título "Cadastro" */
+.cadastro-title {
+  font-size: 2.5em;
+  margin-bottom: calc(2 * var(--spacing-unit));
+  color: var(--text-color);
+  font-weight: 300;
+}
+
+/* Formulário */
+.cadastro-form {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Grupo de formulário (input) */
+.form-group {
+  margin-bottom: var(--spacing-unit);
+  position: relative;
+}
+
+/* Inputs */
+.form-input {
+  width: 100%;
+  padding: calc(0.75 * var(--spacing-unit)) var(--spacing-unit);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1em;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: var(--placeholder-color);
+}
+
+.form-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(123, 44, 61, 0.2);
+}
+
+/* Wrapper da senha */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* --- MENSAGENS DE FEEDBACK --- */
+
+/* Mensagem de Erro */
+.cadastro-error-message {
+  color: var(--error-color);
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-color);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  margin-bottom: var(--spacing-unit);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.9em;
+}
+
+/* Mensagem de Sucesso */
+.cadastro-success-message {
+  color: var(--success-color);
+  background-color: var(--success-bg);
+  border: 1px solid var(--success-color);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  margin-bottom: var(--spacing-unit);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.9em;
+}
+
+/* Botão Cadastrar */
+.connect-button {
+  width: 100%;
+  padding: var(--spacing-unit) calc(1.5 * var(--spacing-unit));
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: calc(1.5 * var(--spacing-unit));
+}
+
+.connect-button:hover {
+  background-color: #5a202d;
+}
+
+/* Links (Ex: "Já tem login?") */
+.cadastro-links {
+  margin-top: calc(2 * var(--spacing-unit));
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+
+.cadastro-links p {
+  margin: 0.5em 0;
+}
+
+.cadastro-links a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Classe para acessibilidade (labels) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .cadastro-card {
+    flex-direction: column;
+    max-width: 400px;
+  }
+  .cadastro-image-section {
+    min-height: 200px;
+    min-width: unset;
+  }
+  .cadastro-form-section {
+    padding: calc(1.5 * var(--spacing-unit));
+  }
+  .cadastro-title {
+    font-size: 2em;
+  }
+}

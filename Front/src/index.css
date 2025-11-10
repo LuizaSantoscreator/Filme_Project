@@ -1,0 +1,29 @@
+/* Reset básico e definições globais */
+:root {
+  /* Cor de fundo principal do Figma */
+  --cor-fundo: #ffffff;
+  
+  /* Cor do cartão */
+  --cor-branco: #FFFFFF;
+  
+  /* Cor do botão */
+  --cor-vermelho: #6b2b2b;
+  
+  /* Cores de texto */
+  --texto-principal: #333;
+  --texto-secundario: #777;
+}
+
+/* Remove margens e define a fonte Poppins para tudo */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--cor-fundo);
+  
+  /* Isto ajuda a centrar os nossos cartões */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}

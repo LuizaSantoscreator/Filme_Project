@@ -14,6 +14,8 @@ import TelaEspecificacoesSolicitacao from './pages/TelaEspecificacoesSolicitacao
 import TelaVisualizacaoFilmes from './pages/TelaVisualizacaoFilmes';
 import TelaAdicionarFilmes from './pages/TelaAdicionarFilmes';
 import TelaEdicaoFilmes from './pages/TelaEdicaoFilmes';
+import TelaAdicionarFilmesADM from './pages/TelaAdicionarFilmesADM';
+
 
 // Importa o seu CSS global
 import './App.css'; 
@@ -40,6 +42,8 @@ function App() {
         <Route path="/admin/notificacoes" element={<TelaNotificacoes />} />
         <Route path="/admin/solicitacao/:id" element={<TelaEspecificacoesSolicitacao />} />
         <Route path="/admin/visualizar-filmes" element={<TelaVisualizacaoFilmes />} />
+        <Route path="/admin/adicionar-filme" element={<TelaAdicionarFilmesADM />} />
+
         
         {/* Rotas de CRUD (provavelmente acedidas a partir do /admin) */}
         <Route path="/admin/adicionar-filme" element={<TelaAdicionarFilmes />} />

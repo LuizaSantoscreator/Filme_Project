@@ -162,7 +162,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=SimpleAPIHandler, port=8000):
     server_address = ('', port) 
     httpd = server_class(server_address, handler_class)
-    print(f"Iniciando API pura Python em http://localhost:{port}/ ...")
+    print(f"Iniciando API em http://localhost:{port}/ ...")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

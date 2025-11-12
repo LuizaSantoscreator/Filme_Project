@@ -1,0 +1,105 @@
+.tela-adm {
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background-color: #062f44;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- SEÇÃO HERO --- */
+.adm-hero {
+  background: linear-gradient(180deg, #0e3a4d 0%, #042b3b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem 6rem;
+  flex-wrap: wrap;
+  position: relative;
+  border-bottom-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+}
+
+.adm-texto h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #ffffff;
+}
+
+.adm-ilustracao img {
+  max-width: 300px;
+  height: auto;
+}
+
+/* --- BOTÕES --- */
+.adm-botoes {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 6rem 2rem;
+  flex-wrap: wrap;
+}
+
+.adm-btn {
+  background-color: #752727;
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  width: 300px;
+  height: 150px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+.adm-btn:hover {
+  background-color: #a13c3c;
+  transform: translateY(-5px);
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 1024px) {
+  .adm-hero {
+    padding: 2.5rem 3rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .adm-texto h1 {
+    font-size: 2rem;
+  }
+
+  .adm-ilustracao img {
+    margin-top: 2rem;
+    max-width: 240px;
+  }
+
+  .adm-botoes {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 4rem 0;
+  }
+
+  .adm-btn {
+    width: 80%;
+    height: 120px;
+  }
+}
+
+@media (max-width: 600px) {
+  .adm-texto h1 {
+    font-size: 1.6rem;
+  }
+
+  .adm-btn {
+    width: 90%;
+    height: 110px;
+    font-size: 1.1rem;
+  }
+}

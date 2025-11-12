@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SecaoFilmes from "../components/SecaoFilmes";
+import FiltroModal from "../components/FiltroModal";
 import "../style/style_pages/TelaFilmes.css";
 
-/**
- * Página principal de Filmes
- * Exibe destaques e múltiplas seções de categorias
- */
+import imagemTitanic from "../assets/imagem_titanic.png";
+import imagemLobo from "../assets/imagem_lobo_wall_streats.png";
+
 function TelaFilmes() {
   const [filmes, setFilmes] = useState([]);
   const [erro, setErro] = useState("");
+  const [modalAberto, setModalAberto] = useState(false);
+  const [filtros, setFiltros] = useState(null);
+  const [busca, setBusca] = useState("");
 
   // Busca filmes do backend
   useEffect(() => {
@@ -26,14 +29,27 @@ function TelaFilmes() {
       }
     };
     fetchFilmes();
-  }, []);
+  }, [filtros]);
+
+  const aplicarFiltros = (filtrosSelecionados) => {
+    console.log("Filtros aplicados:", filtrosSelecionados);
+    setFiltros(filtrosSelecionados);
+  };
+
+  const handleBuscar = (e) => {
+    e.preventDefault();
+    console.log("Buscando por:", busca);
+  };
 
   return (
     <div className="tela-filmes">
       <Header />
 
-      {/* Seção de destaque principal */}
-      <section className="banner-filme" aria-label="Filme em destaque">
+      {/* --- BANNER TITANIC --- */}
+      <section
+        className="banner-filme"
+        style={{ backgroundImage: `url(${imagemTitanic})` }}
+      >
         <div className="overlay"></div>
         <div className="conteudo-banner">
           <h1>TITANIC</h1>
@@ -45,16 +61,41 @@ function TelaFilmes() {
         </div>
       </section>
 
-      {/* Seções dinâmicas */}
+      {/* --- BARRA DE BUSCA E FILTRO --- */}
+      <section className="filtro-section" aria-label="Busca e filtros de filmes">
+        <form className="filtro-container" onSubmit={handleBuscar}>
+          <input
+            type="text"
+            className="campo-busca"
+            placeholder="Busque por título, ator ou diretor..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+          <button type="submit" className="btn-buscar">
+            Buscar
+          </button>
+          <button
+            type="button"
+            className="btn-filtro"
+            onClick={() => setModalAberto(true)}
+          >
+            🔍 Filtros
+          </button>
+        </form>
+      </section>
+
       {erro && <p className="mensagem-erro">{erro}</p>}
 
-      <SecaoFilmes titulo="Filmes para dar risada" filmes={filmes} />
-      <SecaoFilmes titulo="Filmes para se emocionar" filmes={filmes} />
+      {/* --- SEÇÕES DE FILMES --- */}
+      <main>
+        <SecaoFilmes titulo="Filmes para dar risada" filmes={filmes} />
+        <SecaoFilmes titulo="Filmes para se emocionar" filmes={filmes} />
+      </main>
 
-      {/* Segundo destaque */}
+      {/* --- BANNER SECUNDÁRIO --- */}
       <section
         className="banner-filme banner-secundario"
-        aria-label="Filme destaque 2"
+        style={{ backgroundImage: `url(${imagemLobo})` }}
       >
         <div className="overlay"></div>
         <div className="conteudo-banner">
@@ -67,8 +108,17 @@ function TelaFilmes() {
         </div>
       </section>
 
-      <SecaoFilmes titulo="Filmes para dar risada" filmes={filmes} />
-      <SecaoFilmes titulo="Filmes para se emocionar" filmes={filmes} />
+      <main>
+        <SecaoFilmes titulo="Filmes para dar risada" filmes={filmes} />
+        <SecaoFilmes titulo="Filmes para se emocionar" filmes={filmes} />
+      </main>
+
+      {/* MODAL DE FILTRO */}
+      <FiltroModal
+        isOpen={modalAberto}
+        onClose={() => setModalAberto(false)}
+        onApply={aplicarFiltros}
+      />
 
       <Footer />
     </div>

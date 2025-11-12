@@ -1,26 +1,22 @@
 .tela-filmes {
   width: 100%;
   min-height: 100vh;
-  background-color: #062f44;
   font-family: "Poppins", sans-serif;
+  background-color: #062f44;
   color: #ffffff;
   overflow-x: hidden;
 }
 
-/* --- BANNER PRINCIPAL --- */
+/* --- BANNER --- */
 .banner-filme {
   position: relative;
   height: 80vh;
-  background: url("/src/assets/imagem_titanic.png") center/cover no-repeat;
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   padding: 0 5rem;
-}
-
-.banner-secundario {
-  background: url("/src/assets/imagem_lobo_wall_streats.png") center/cover
-    no-repeat;
 }
 
 .banner-filme .overlay {
@@ -40,8 +36,8 @@
 
 .conteudo-banner h1 {
   font-size: 3rem;
-  margin-bottom: 1rem;
   font-weight: 700;
+  margin-bottom: 1rem;
 }
 
 .descricao-banner {
@@ -65,8 +61,101 @@
   background-color: #f0c299;
 }
 
+/* --- BARRA DE BUSCA E FILTROS --- */
+.filtro-section {
+  background-color: #062f44; /* remove a faixa branca */
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.filtro-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 700px;
+  background-color: #0d405a;
+  padding: 1rem 1.5rem;
+  border-radius: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.campo-busca {
+  flex: 1;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  outline: none;
+  color: #333;
+}
+
+.btn-buscar {
+  background-color: #e1b287;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-buscar:hover {
+  background-color: #f0c299;
+}
+
+.btn-filtro {
+  background-color: #e1b287;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-filtro:hover {
+  background-color: #f0c299;
+}
+
+/* --- SEÇÕES DE FILMES --- */
+main {
+  background-color: #062f44;
+  padding-bottom: 3rem;
+}
+
 .mensagem-erro {
   text-align: center;
   color: #ff6b6b;
-  margin-top: 2rem;
+  margin: 1rem 0;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+  .banner-filme {
+    height: 60vh;
+    padding: 0 2rem;
+  }
+
+  .conteudo-banner h1 {
+    font-size: 2rem;
+  }
+
+  .descricao-banner {
+    font-size: 0.95rem;
+  }
+
+  .filtro-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.2rem;
+  }
+
+  .btn-buscar,
+  .btn-filtro {
+    width: 100%;
+  }
 }

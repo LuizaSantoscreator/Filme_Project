@@ -1,0 +1,218 @@
+/* ====== CONTAINER GERAL ====== */
+.tela-adicionar-filme-adm {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  color: #0e3a4d;
+}
+
+/* ====== ÁREA PRINCIPAL ====== */
+.main-adicionar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* ====== TÍTULO ====== */
+.secao-superior {
+  width: 100%;
+  color: #fff;
+  text-align: center;
+  padding: 4rem 1rem 2rem;
+  border-bottom-left-radius: 60px;
+  border-bottom-right-radius: 60px;
+}
+
+.secao-superior h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* ====== FORMULÁRIO ====== */
+.secao-formulario {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.formulario-filme {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1000px;
+}
+
+/* ====== COLUNA ESQUERDA ====== */
+.coluna-esquerda {
+  flex: 1;
+  min-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.coluna-esquerda label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #0e3a4d;
+}
+
+.coluna-esquerda input,
+.coluna-esquerda textarea {
+  width: 100%;
+  background-color: #ffffff;
+  border: 2px solid #752727;
+  border-radius: 25px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  color: #000;
+  outline: none;
+  resize: none;
+  transition: border-color 0.3s ease, box-shadow 0.2s ease;
+}
+
+.coluna-esquerda input:focus,
+.coluna-esquerda textarea:focus {
+  border-color: #a13c3c;
+  box-shadow: 0 0 0 3px rgba(117, 39, 39, 0.15);
+}
+
+.coluna-esquerda textarea {
+  height: 120px;
+}
+
+/* ====== COLUNA DIREITA ====== */
+.coluna-direita {
+  flex: 0.8;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* ====== UPLOAD ====== */
+.upload-container {
+  background-color: #ffffff;
+  color: #000;
+  border-radius: 20px;
+  width: 280px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.upload-container p {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.poster-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.icone-upload {
+  font-size: 2rem;
+  color: #0e3a4d;
+  margin-bottom: 0.5rem;
+}
+
+/* ====== BOTÕES ====== */
+.btn-upload {
+  background-color: #752727;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-upload:hover {
+  background-color: #a13c3c;
+  transform: translateY(-3px);
+}
+
+.btn-enviar {
+  background-color: #752727;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.9rem 2.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-enviar:hover {
+  background-color: #a13c3c;
+  transform: translateY(-3px);
+}
+
+/* ====== MENSAGEM ====== */
+.mensagem-status {
+  color: #0e3a4d;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 900px) {
+  .formulario-filme {
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .coluna-direita {
+    margin-top: 2rem;
+  }
+
+  .upload-container {
+    width: 240px;
+    height: 300px;
+  }
+
+  .btn-enviar {
+    width: 80%;
+  }
+}
+
+@media (max-width: 600px) {
+  .secao-superior h1 {
+    font-size: 1.8rem;
+  }
+
+  .formulario-filme {
+    padding: 1.5rem;
+  }
+
+  .coluna-esquerda label {
+    font-size: 0.9rem;
+  }
+
+  .coluna-esquerda input,
+  .coluna-esquerda textarea {
+    font-size: 0.9rem;
+  }
+}

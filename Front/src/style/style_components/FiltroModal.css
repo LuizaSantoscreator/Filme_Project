@@ -1,0 +1,132 @@
+/* Overlay escuro */
+.filtro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* Modal container */
+.filtro-modal {
+  background: linear-gradient(180deg, #07425f 0%, #022836 100%);
+  color: #fff;
+  width: 90%;
+  max-width: 600px;
+  padding: 2rem 2.5rem;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: aparecer 0.3s ease;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Botão de fechar */
+.filtro-fechar {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.filtro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Título */
+.filtro-titulo {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+/* Checkboxes */
+.filtro-generos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.checkbox-input {
+  accent-color: #e1b287;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Campos */
+.filtro-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filtro-campo label {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.filtro-campo input,
+.filtro-campo select {
+  border: 2px solid #c8a59c;
+  border-radius: 25px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  color: #333;
+  outline: none;
+}
+
+.filtro-campo input::placeholder {
+  color: #999;
+}
+
+/* Botão */
+.filtro-botoes {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.btn-aplicar {
+  background-color: #e1b287;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-aplicar:hover {
+  background-color: #f0c299;
+}

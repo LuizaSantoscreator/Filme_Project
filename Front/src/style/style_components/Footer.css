@@ -1,68 +1,65 @@
-/* ==============================
-   FOOTER - RODAPÉ
-   ============================== */
-
-.footer {
+footer {
   background-color: #062f44;
   color: #ffffff;
-  padding: 2rem 1rem;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
-}
-
-.footer-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1.2rem 4rem; /* estava 3rem ou mais, agora bem menor */
+  font-family: "Poppins", sans-serif;
   flex-wrap: wrap;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* LOGO */
-.footer-logo a {
-  text-decoration: none;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.3rem;
-}
-
-/* LINKS */
-.footer-links a {
-  text-decoration: none;
-  color: #ffffff;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-.footer-links a:hover {
-  color: #f0c08f;
-}
-
-/* REDES SOCIAIS */
-.footer-social {
-  display: flex;
   gap: 1rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.05);
 }
 
-.footer-social a {
+footer .footer-logo {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+footer .footer-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+footer .footer-links a {
   color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
   transition: color 0.3s;
 }
 
-.footer-social a:hover {
-  color: #f0c08f;
+footer .footer-links a:hover {
+  color: #e1b287;
 }
 
-/* RESPONSIVO */
+footer .footer-social {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+footer .footer-social a {
+  color: #ffffff;
+  font-size: 1.3rem;
+  transition: color 0.3s;
+}
+
+footer .footer-social a:hover {
+  color: #e1b287;
+}
+
+/* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
-  .footer-container {
+  footer {
     flex-direction: column;
+    justify-content: center;
     text-align: center;
-    gap: 1rem;
+    padding: 1.5rem 2rem;
   }
 
-  .footer-social {
-    justify-content: center;
+  footer .footer-links {
+    margin-top: 0.5rem;
   }
 }

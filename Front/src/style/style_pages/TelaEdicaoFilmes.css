@@ -1,0 +1,179 @@
+/* ===== CONTAINER GERAL ===== */
+.telaEdicaoFilmeAdm {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(180deg, #1b3648 0%, #122e3e 60%, #752727 100%);
+}
+
+/* ===== ÁREA PRINCIPAL ===== */
+.mainEdicao {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===== TÍTULO ===== */
+.secaoSuperior {
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  padding: 2.5rem 1rem 1rem; /* diminuímos o topo e o bottom */
+}
+
+.formularioFilme {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 0.5rem; /* antes era 2rem */
+}
+
+/* ===== COLUNA ESQUERDA ===== */
+.colunaEsquerda {
+  flex: 1;
+  min-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.colunaEsquerda label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.colunaEsquerda input,
+.colunaEsquerda textarea {
+  width: 100%;
+  background-color: #fff;
+  border: 2px solid #752727;
+  border-radius: 25px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  color: #000;
+  outline: none;
+  resize: none;
+  transition: border-color 0.3s ease, box-shadow 0.2s ease;
+}
+
+.colunaEsquerda input:focus,
+.colunaEsquerda textarea:focus {
+  border-color: #a13c3c;
+  box-shadow: 0 0 0 3px rgba(117, 39, 39, 0.15);
+}
+
+.colunaEsquerda textarea {
+  height: 120px;
+}
+
+/* ===== COLUNA DIREITA ===== */
+.colunaDireita {
+  flex: 0.9;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* <-- centraliza verticalmente */
+  gap: 2rem;
+}
+
+/* ===== UPLOAD ===== */
+.uploadContainer {
+  background-color: #ffffff;
+  color: #000;
+  border-radius: 20px;
+  width: 280px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.uploadContainer p {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.posterPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.iconeUpload {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #0e3a4d;
+}
+
+/* ===== BOTÕES ===== */
+.btnUpload {
+  background-color: #752727;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btnUpload:hover {
+  background-color: #a13c3c;
+}
+
+.botoesAcoes {
+  display: flex;
+  gap: 1rem;
+}
+
+.btnSalvar {
+  background-color: #752727;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btnSalvar:hover {
+  background-color: #a13c3c;
+}
+
+.btnExcluir {
+  background-color: #b1703c;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btnExcluir:hover {
+  background-color: #a55d24;
+}
+
+.mensagemStatus {
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 0.5rem;
+}

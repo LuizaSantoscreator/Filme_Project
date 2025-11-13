@@ -14,8 +14,7 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: var(--cor-azul-escuro); /* Fundo externo azul */
-  overflow-x: hidden; /* Evita scroll lateral */
+  overflow-x: hidden; 
 }
 
 body {

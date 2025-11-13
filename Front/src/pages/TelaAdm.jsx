@@ -31,21 +31,25 @@ export default function TelaAdm() {
         <section className="adm-botoes" aria-label="Ações do administrador">
           <button
             className="adm-btn"
+            // Este caminho está diferente no seu App.jsx, verifique se /admin/adicionar-filme não é o correto.
             onClick={() => navigate("/adicionar-filmes")}
           >
             Adicionar Filmes
           </button>
 
+          {/* --- BOTÃO CORRIGIDO --- */}
+          {/* O caminho foi atualizado para '/admin/notificacoes' */}
           <button
             className="adm-btn"
-            onClick={() => navigate("/solicitacoes")}
+            onClick={() => navigate("/admin/notificacoes")}
           >
             Solicitações de Filmes
           </button>
 
           <button
             className="adm-btn"
-            onClick={() => navigate("/visualizar-filmes")}
+            // Este caminho também está no seu App.jsx
+            onClick={() => navigate("/admin/visualizar-filmes")}
           >
             Visualizar Filmes
           </button>

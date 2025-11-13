@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 // Importe o 'Link' para fazer os botões navegarem
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import "../style/style_pages/TelaInicial.css";
 import imagemInicial from "../assets/mulher_pagina_inicial.png";
 import imagemForm from "../assets/Imagem_tela _inicial_forms.png";
@@ -13,7 +13,7 @@ import Footer from "../components/Footer.jsx";
 
 export default function TelaInicial() {
   // --- CONEXÃO COM O BACKEND (INÍCIO) ---
-  
+
   // Criamos um 'estado' para guardar os filmes que vêm do backend
   const [filmes, setFilmes] = useState([]);
   const [error, setError] = useState(null);
@@ -25,14 +25,14 @@ export default function TelaInicial() {
       try {
         // Faz a requisição GET para a rota do seu backend
         const response = await fetch('http://localhost:8000/filmes');
-        
+
         if (!response.ok) {
           throw new Error('Falha ao buscar filmes do servidor.');
         }
-        
+
         const data = await response.json();
         // Pegamos apenas os 4 primeiros filmes para esta seção
-        setFilmes(data.slice(0, 4)); 
+        setFilmes(data.slice(0, 4));
 
       } catch (err) {
         setError(err.message);
@@ -68,17 +68,17 @@ export default function TelaInicial() {
       <section className="populares-section">
         <h3>FILMES MAIS POPULARES</h3>
         <div className="lista-filmes">
-          
+
           {/* Se der erro, mostramos a mensagem */}
           {error && <p>Erro ao carregar filmes: {error}</p>}
-          
+
           {/* Se não der erro, usamos .map() para criar os cards */}
           {!error && filmes.map((filme) => (
             <div className="card-filme" key={filme.id}>
               {/* Usamos a poster_url do backend */}
-              <img 
-                src={filme.poster_url} 
-                alt={`Pôster do filme ${filme.titulo}`} 
+              <img
+                src={filme.poster_url}
+                alt={`Pôster do filme ${filme.titulo}`}
                 className="card-filme-poster" // Adicionei uma classe
               />
               <h4>{filme.titulo}</h4>
@@ -109,7 +109,7 @@ export default function TelaInicial() {
           <img src={imagemForm} alt="Ilustração" />
         </div>
       </section>
-      
+
       {/* FOOTER */}
       <Footer />
     </div>

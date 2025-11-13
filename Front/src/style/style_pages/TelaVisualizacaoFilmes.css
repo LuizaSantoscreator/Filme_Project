@@ -1,0 +1,87 @@
+.telaEspecificacoes {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background: linear-gradient(180deg, #0e3a4d 0%, #1b4254 40%, #4a2f3b 75%, #752727 100%);
+}
+
+.mainEspecificacoes {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem 5rem;
+}
+
+.containerFilme {
+  display: flex;
+  gap: 3rem;
+  max-width: 1000px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.posterFilme {
+  width: 280px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.detalhesFilme {
+  flex: 1;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.detalhesFilme h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.sinopse {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #f1f1f1;
+}
+
+.generos {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.tagGenero {
+  background-color: #d5a685;
+  color: #000;
+  border-radius: 20px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.carregando {
+  font-size: 1.2rem;
+  color: #fff;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+@media (max-width: 800px) {
+  .containerFilme {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .posterFilme {
+    width: 220px;
+  }
+
+  .detalhesFilme h1 {
+    font-size: 1.6rem;
+  }
+}

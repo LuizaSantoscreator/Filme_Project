@@ -12,12 +12,12 @@ function SecaoFilmes({ titulo, filmes }) {
       <h2 className="secao-titulo">{titulo}</h2>
       <div className="lista-filmes">
         {filmes && filmes.length > 0 ? (
+          /* AQUI ESTÁ A CORREÇÃO: */
           filmes.map((filme) => (
+
             <CardFilme
               key={filme.id}
-              titulo={filme.titulo}
-              imagem={filme.imagem_url}
-              onAcessar={() => alert(`Acessar ${filme.titulo}`)}
+              filme={filme}
             />
           ))
         ) : (

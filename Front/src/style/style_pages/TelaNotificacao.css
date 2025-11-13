@@ -1,0 +1,116 @@
+/* ===== CONTAINER GERAL ===== */
+.telaNotificacao {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  background: linear-gradient(180deg, #0e3a4d 0%, #0e3a4d 85%, #0b2735 100%);
+}
+
+/* ===== ÁREA PRINCIPAL ===== */
+.mainNotificacao {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem 6rem;
+}
+
+.mainNotificacao h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  color: #ffffff;
+}
+
+/* ===== LISTA ===== */
+.listaNotificacoes {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* ===== CARD DE NOTIFICAÇÃO ===== */
+.cardNotificacao {
+  background-color: #fff;
+  color: #000;
+  border-radius: 25px;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.cardNotificacao p {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #0e3a4d;
+}
+
+/* ===== AÇÕES ===== */
+.acoesNotificacao {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ===== BOTÃO VER ===== */
+.btnVer {
+  background-color: #752727;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btnVer:hover {
+  background-color: #a13c3c;
+  transform: translateY(-2px);
+}
+
+/* ===== BOTÃO EXCLUIR ===== */
+.btnExcluir {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #000;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.btnExcluir:hover {
+  transform: scale(1.1);
+  color: #000;
+}
+
+/* ===== MENSAGEM DE VAZIO ===== */
+.semNotificacoes {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 700px) {
+  .cardNotificacao {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .acoesNotificacao {
+    align-self: flex-end;
+  }
+}

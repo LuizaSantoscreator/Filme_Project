@@ -1,0 +1,36 @@
+/*
+ * CSS para os botões de admin na TelaDetalhesADM
+ * Este arquivo complementa o 'TelaVisualizacaoFilmes.css'
+ */
+
+.admin-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-admin-acao {
+  /* Estilo base (copiado do seu figma) */
+  background-color: #E1B287;
+  color: #000;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-admin-acao:hover {
+  background-color: #f0c299;
+  transform: translateY(-2px);
+}
+
+/* Para manter a aparência do <Link> igual ao <button> */
+.btn-admin-editar {
+  display: inline-block;
+  text-align: center;
+}

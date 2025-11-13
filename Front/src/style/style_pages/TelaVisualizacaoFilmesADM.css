@@ -1,0 +1,112 @@
+/*
+ * Arquivo: TelaVisualizacaoFilmes.css
+ * Descrição: Estilos para a tela de admin que lista os filmes.
+ */
+
+.tela-visualizacao-filmes {
+  background-color: #f4f4f4; /* Fundo cinza claro */
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-visualizacao {
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  flex-grow: 1; /* Faz o main crescer */
+}
+
+.main-visualizacao h1 {
+  font-size: 2rem;
+  color: #062f44;
+  margin-top: 0;
+}
+
+.main-visualizacao p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.container-tabela {
+  width: 100%;
+  overflow-x: auto; /* Permite scroll horizontal em telas pequenas */
+}
+
+.tabela-filmes {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-filmes thead {
+  background-color: #062f44;
+  color: #ffffff;
+}
+
+.tabela-filmes th,
+.tabela-filmes td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabela-filmes th {
+  font-weight: 600;
+}
+
+.tabela-poster {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.tabela-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-tabela {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  transition: opacity 0.3s;
+}
+.btn-tabela:hover {
+  opacity: 0.8;
+}
+
+.btn-editar {
+  background-color: #e8c49d; /* Bege/Dourado */
+  color: #333;
+}
+
+.btn-excluir {
+  background-color: #6b2b2b; /* Vermelho escuro */
+  color: #ffffff;
+}
+
+.mensagem-feedback {
+  font-size: 1.1rem;
+  color: #555;
+  text-align: center;
+  padding: 2rem;
+}
+.mensagem-feedback.erro {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+}

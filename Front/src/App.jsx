@@ -15,6 +15,8 @@ import TelaVisualizacaoFilmes from './pages/TelaVisualizacaoFilmes';
 import TelaAdicionarFilmes from './pages/TelaAdicionarFilmes';
 import TelaEdicaoFilmes from './pages/TelaEdicaoFilmes';
 import TelaAdicionarFilmesADM from './pages/TelaAdicionarFilmesADM';
+import TelaVisualizacaoFilmesADM from './pages/TelaVisualizacaoFilmesADM';
+import TelaDetalhesADM from './pages/TelaDetalhesADM';
 
 
 // Importa o seu CSS global
@@ -43,6 +45,8 @@ function App() {
         <Route path="/admin/solicitacao/:id" element={<TelaEspecificacoesSolicitacao />} />
         <Route path="/admin/visualizar-filmes" element={<TelaVisualizacaoFilmes />} />
         <Route path="/admin/adicionar-filme" element={<TelaAdicionarFilmesADM />} />
+        <Route path="/admin/filme/:id" element={<TelaDetalhesADM />} />
+        
 
         
         {/* Rotas de CRUD (provavelmente acedidas a partir do /admin) */}

@@ -1,3 +1,5 @@
+// src/pages/TelaNotificacoes.jsx (CORRIGIDO)
+
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -8,10 +10,13 @@ import { useNavigate } from "react-router-dom";
 export default function TelaNotificacao() {
   const [notificacoes, setNotificacoes] = useState([]);
   const [error, setError] = useState("");
+  // Adiciona um estado de mensagem para feedback
+  const [mensagem, setMensagem] = useState("");
+  
   // Inicializa o hook de navegação
   const navigate = useNavigate();
 
-  // --- CONEXÃO COM O BACKEND ---
+  // --- CONEXÃO COM O BACKEND (Já estava correta) ---
   useEffect(() => {
     // Função para buscar as notificações (solicitações pendentes)
     const fetchNotificacoes = async () => {
@@ -37,7 +42,8 @@ export default function TelaNotificacao() {
         );
 
         if (!response.ok) {
-          throw new Error("Falha ao buscar notificações. Tente novamente.");
+          const data = await response.json();
+          throw new Error(data.erro || "Falha ao buscar notificações.");
         }
 
         const data = await response.json();
@@ -54,19 +60,50 @@ export default function TelaNotificacao() {
 
   // --- Funções de Ação ---
 
-  // Excluir notificação (Rejeitar)
+  // --- 1. CORREÇÃO: Conecta o botão "Excluir" (Rejeitar) ---
   const handleExcluir = async (id) => {
-    // ATENÇÃO: Seu backend NÃO TEM um endpoint para
-    // "rejeitar" uma solicitação de ADIÇÃO (apenas de EDIÇÃO).
-    // Esta função irá apenas remover da tela, mas não do banco.
-    console.warn(`Ação de Rejeitar (ID: ${id}) não implementada no backend.`);
-    alert("Função 'Rejeitar' não conectada ao backend (endpoint 'rejeitar_adicao' faltando).");
-    
-    // Para o frontend (apenas remove da tela):
-    setNotificacoes(notificacoes.filter((n) => n.id !== id));
-  };
+    // Limpa mensagens antigas
+    setError("");
+    setMensagem("");
 
-  // Visualizar especificações
+    // Adiciona uma confirmação
+    if (!window.confirm("Tem certeza que deseja REJEITAR esta solicitação?")) {
+      return;
+    }
+
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      setError("Acesso negado. Faça login como administrador.");
+      return;
+    }
+
+    try {
+      // Chama a nova rota PUT de rejeição que criamos
+      const response = await fetch(`http://localhost:8000/admin/rejeitar/${id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.erro || "Falha ao rejeitar a solicitação.");
+      }
+
+      // Sucesso: Mostra a mensagem e remove da tela
+      setMensagem(data.mensagem); // "Solicitação de adição rejeitada com sucesso."
+      setNotificacoes(notificacoes.filter((n) => n.id !== id));
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message); // Mostra o erro na tela
+    }
+  };
+  // --- FIM DA CORREÇÃO ---
+
+
+  // Visualizar especificações (Já estava correto)
   const handleVerEspecificacoes = (id) => {
     console.log("Ver detalhes da solicitação", id);
     // Redireciona para a tela de detalhes da solicitação
@@ -80,20 +117,20 @@ export default function TelaNotificacao() {
       <main className="mainNotificacao">
         <h1>Notificações</h1>
 
-        <div className="listaNotificacoes">
-          {error && <p className="semNotificacoes">{error}</p>}
+        {/* Mostra mensagens de erro ou sucesso */}
+        {error && <p className="semNotificacoes erro-msg">{error}</p>}
+        {mensagem && <p className="semNotificacoes sucesso-msg">{mensagem}</p>}
 
-          {!error && notificacoes.length === 0 ? (
+        <div className="listaNotificacoes">
+          {!error && notificacoes.length === 0 && !mensagem ? (
             <p className="semNotificacoes">Nenhuma notificação no momento.</p>
           ) : (
             // Usa os dados reais vindos do backend
             notificacoes.map((notificacao) => (
               <div key={notificacao.id} className="cardNotificacao">
                 <p>
-                  {/* Seu backend não retorna o nome, 
-                      apenas o ID do usuário. 
-                      Para mostrar o nome, o backend precisaria de um JOIN. */}
-                  Usuário (ID: {notificacao.solicitado_por_id}) solicitou a adição do filme “
+                  {/* Agora usamos o nome do usuário que veio do backend */}
+                  <strong>{notificacao.solicitado_por_nome || `Usuário ID ${notificacao.solicitado_por_id}`}</strong> solicitou a adição do filme “
                   {notificacao.titulo}”
                 </p>
 
@@ -106,8 +143,8 @@ export default function TelaNotificacao() {
                   </button>
                   <button
                     className="btnExcluir"
-                    onClick={() => handleExcluir(notificacao.id)}
-                    aria-label="Excluir notificação"
+                    onClick={() => handleExcluir(notificacao.id)} // <-- Agora funciona
+                    aria-label="Rejeitar solicitação"
                   >
                     ✖
                   </button>

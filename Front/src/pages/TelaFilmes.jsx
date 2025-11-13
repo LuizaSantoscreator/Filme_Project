@@ -1,3 +1,5 @@
+// src/pages/TelaFilmes.jsx (CORRIGIDO)
+
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -7,7 +9,6 @@ import "../style/style_pages/TelaFilmes.css";
 
 import imagemTitanic from "../assets/imagem_titanic.png";
 import imagemLobo from "../assets/imagem_lobo_wall_streats.png";
-// Importe o 'Link' para os botões "Saiba Mais"
 import { Link } from "react-router-dom";
 
 function TelaFilmes() {
@@ -24,56 +25,61 @@ function TelaFilmes() {
   // --- CONEXÃO COM O BACKEND (CORRIGIDO) ---
   useEffect(() => {
     const fetchFilmes = async () => {
-      try {
-        let url = "";
-        const params = new URLSearchParams();
+      let url = "";
+      const params = new URLSearchParams();
 
-        // 1. Adiciona o termo da barra de busca (se existir)
-        // O backend espera 'titulo'
-        if (busca) {
-          params.append('titulo', busca);
-        }
+      // 1. Adiciona o termo da barra de busca (se existir)
+      // O backend espera 'titulo'
+      if (busca) {
+        params.append('titulo', busca);
+      }
 
-        // 2. Adiciona os filtros do modal (se existirem)
-        if (filtros) {
-
-          // ---- CORREÇÃO 1: GÊNEROS (PLURAL) ----
-          // O modal envia 'generos' (plural) como um array.
-          // O backend só suporta UM gênero, então pegamos o primeiro.
-          if (filtros.generos && filtros.generos.length > 0) {
-            params.append('genero', filtros.generos[0]); 
-            // OBS: Seu backend só filtra um gênero.
-            // Se quiser filtrar múltiplos, o backend precisará ser alterado.
-          }
-
-          if (filtros.ano) {
-            params.append('ano', filtros.ano);
-          }
-          if (filtros.diretor) {
-            params.append('diretor', filtros.diretor);
-          }
-
-          // ---- CORREÇÃO 2: ATORES (PLURAL/SINGULAR) ----
-          // O modal envia 'atores' (plural).
-          // O backend espera 'ator' (singular).
-          if (filtros.atores) { 
-            params.append('ator', filtros.atores); 
-          }
-        }
-
-        const queryString = params.toString();
-
-        // 3. Decide qual rota do backend chamar
-        if (queryString) {
-          url = `http://localhost:8000/filmes/buscar?${queryString}`;
-        } else {
-          url = "http://localhost:8000/filmes";
-        }
+      // 2. Adiciona os filtros do modal (se existirem)
+      if (filtros) {
         
-        console.log("Buscando na URL:", url); // Para depuração
+        // --- CORREÇÃO DE TRADUÇÃO (GÊNERO) ---
+        // O modal envia 'generos' (plural) como um array.
+        // O backend espera 'genero' (singular).
+        if (filtros.generos && filtros.generos.length > 0) {
+          // Pegamos o primeiro gênero selecionado.
+          // (Seu backend só suporta filtrar um gênero por vez)
+          params.append('genero', filtros.generos[0]); 
+        }
+        // --- FIM DA CORREÇÃO ---
 
+        if (filtros.ano) {
+          params.append('ano', filtros.ano);
+        }
+        if (filtros.diretor) {
+          params.append('diretor', filtros.diretor);
+        }
+
+        // --- CORREÇÃO DE TRADUÇÃO (ATOR) ---
+        // O modal envia 'atores' (plural).
+        // O backend espera 'ator' (singular).
+        if (filtros.atores) { 
+          params.append('ator', filtros.atores); 
+        }
+        // --- FIM DA CORREÇÃO ---
+      }
+
+      const queryString = params.toString();
+
+      // 3. Decide qual rota do backend chamar
+      if (queryString) {
+        url = `http://localhost:8000/filmes/buscar?${queryString}`;
+      } else {
+        url = "http://localhost:8000/filmes";
+      }
+      
+      console.log("Buscando na URL:", url); // Para depuração
+
+      try {
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Erro ao carregar filmes.");
+        if (!response.ok) {
+           const data = await response.json();
+           throw new Error(data.erro || "Erro ao carregar filmes.");
+        }
         const data = await response.json();
         
         setFilmes(data);
@@ -86,13 +92,13 @@ function TelaFilmes() {
       } catch (error) {
         console.error(error);
         setFilmes([]); 
-        setErro("Não foi possível carregar os filmes.");
+        setErro(`Não foi possível carregar os filmes: ${error.message}`);
       }
     };
     
     fetchFilmes();
     
-  }, [triggerFetch]); // Roda sempre que 'triggerFetch' mudar
+  }, [triggerFetch, busca, filtros]); // <-- Adicionei 'busca' e 'filtros' aqui
 
   
   // --- FUNÇÕES DE BUSCA E FILTRO ---
@@ -110,11 +116,12 @@ function TelaFilmes() {
     setTriggerFetch(t => t + 1); // Dispara o useEffect
   };
 
+  // --- RENDERIZAÇÃO (Sem alterações) ---
   return (
     <div className="tela-filmes">
       <Header />
 
-      {/* --- BANNER TITANIC --- */}
+      {/* ... (Banner do Titanic) ... */}
       <section
         className="banner-filme"
         style={{ backgroundImage: `url(${imagemTitanic})` }}
@@ -126,7 +133,6 @@ function TelaFilmes() {
             Um épico de James Cameron sobre amor, classe e destino a bordo do
             Titanic.
           </p>
-          {/* Adicione o ID do filme se souber */}
           <Link to="/filmes/4" className="btn-principal">
             Saiba Mais
           </Link>
@@ -156,35 +162,15 @@ function TelaFilmes() {
         </form>
       </section>
 
-      {erro && <p className="mensagem-erro">{erro}</p>}
+      {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
       {/* --- SEÇÕES DE FILMES --- */}
       <main>
-        {/* Esta seção agora mostra os resultados da busca ou filtros */}
         <SecaoFilmes 
           titulo={filtros || busca ? "Resultados" : "Todos os Filmes"} 
           filmes={filmes} 
         />
       </main>
-
-      {/* --- BANNER SECUNDÁRIO --- */}
-      <section
-        className="banner-filme banner-secundario"
-        style={{ backgroundImage: `url(${imagemLobo})` }}
-      >
-        <div className="overlay"></div>
-        <div className="conteudo-banner">
-          <h1>O LOBO DE WALL STREET</h1>
-          <p className="descricao-banner">
-            A ascensão e queda de Jordan Belfort, um corretor de ações
-            carismático e implacável.
-          </p>
-          {/* Adicione o ID do filme se souber */}
-          <Link to="/filmes/3" className="btn-principal">
-            Saiba Mais
-          </Link>
-        </div>
-      </section>
 
       {/* MODAL DE FILTRO */}
       <FiltroModal

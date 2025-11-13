@@ -1,3 +1,5 @@
+// src/App.jsx (COMPLETO E CORRIGIDO)
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
@@ -7,17 +9,15 @@ import TelaCadastro from './pages/TelaCadastro';
 import TelaLoginADM from './pages/TelaLoginADM';
 import TelaInicial from './pages/TelaInicial';
 import TelaFilmes from './pages/TelaFilmes';
-import TelaDetalhes from './pages/TelaDetalhes';
+import TelaDetalhes from './pages/TelaDetalhes'; // <-- Detalhes do Usuário
 import TelaAdm from './pages/TelaAdm';
 import TelaNotificacoes from './pages/TelaNotificacoes';
 import TelaEspecificacoesSolicitacao from './pages/TelaEspecificacoesSolicitacao';
-import TelaVisualizacaoFilmes from './pages/TelaVisualizacaoFilmes';
-import TelaAdicionarFilmes from './pages/TelaAdicionarFilmes';
+import TelaAdicionarFilmes from './pages/TelaAdicionarFilmes'; // <-- Formulário do Usuário
 import TelaEdicaoFilmes from './pages/TelaEdicaoFilmes';
-import TelaAdicionarFilmesADM from './pages/TelaAdicionarFilmesADM';
-import TelaVisualizacaoFilmesADM from './pages/TelaVisualizacaoFilmesADM';
-import TelaDetalhesADM from './pages/TelaDetalhesADM';
-
+import TelaAdicionarFilmesADM from './pages/TelaAdicionarFilmesADM'; // <-- Formulário do Admin
+import TelaVisualizacaoFilmesADM from './pages/TelaVisualizacaoFilmesADM'; // <-- Tabela do Admin
+import TelaDetalhesADM from './pages/TelaDetalhesADM'; // <-- Detalhes do Admin
 
 // Importa o seu CSS global
 import './App.css'; 
@@ -25,35 +25,37 @@ import './App.css';
 function App() {
   return (
     <BrowserRouter>
-      {/* Idealmente, teríamos um componente <Header /> ou <Navbar /> aqui.
-        Por agora, vamos deixar o App.jsx controlar as rotas. 
+      {/* O Header/Footer é renderizado dentro de cada página individual,
+        o que está correto para as suas telas de login/cadastro.
       */}
       <Routes>
-        {/* Rotas de Autenticação */}
+        {/* === CORREÇÃO: Rotas de Autenticação e Principal === */}
+        {/* A Rota '/' (raiz) agora é a TelaCadastro */}
+        <Route path="/" element={<TelaCadastro />} />
         <Route path="/login" element={<TelaLogin />} />
-        <Route path="/cadastro" element={<TelaCadastro />} />
         <Route path="/login-adm" element={<TelaLoginADM />} />
         
-        {/* Rotas de Utilizador Comum */}
-        <Route path="/" element={<TelaInicial />} />
+        {/* === CORREÇÃO: Rotas de Utilizador Comum === */}
+        {/* A TelaInicial agora está em '/home' */}
+        <Route path="/home" element={<TelaInicial />} />
         <Route path="/filmes" element={<TelaFilmes />} />
         <Route path="/filmes/:id" element={<TelaDetalhes />} /> 
+        {/* Rota para o formulário do usuário (sugestão) */}
+        <Route path="/adicionar-filme" element={<TelaAdicionarFilmes />} />
         
-        {/* Rotas de Admin */}
+        {/* === CORREÇÃO: Rotas de Admin (Limpas e Corrigidas) === */}
         <Route path="/admin" element={<TelaAdm />} />
         <Route path="/admin/notificacoes" element={<TelaNotificacoes />} />
         <Route path="/admin/solicitacao/:id" element={<TelaEspecificacoesSolicitacao />} />
-        <Route path="/admin/visualizar-filmes" element={<TelaVisualizacaoFilmes />} />
+        {/* Rota aponta para a tabela de Admin (correto) */}
+        <Route path="/admin/visualizar-filmes" element={<TelaVisualizacaoFilmesADM />} />
+        {/* Rota aponta para o formulário de Admin (correto) */}
         <Route path="/admin/adicionar-filme" element={<TelaAdicionarFilmesADM />} />
-        <Route path="/admin/filme/:id" element={<TelaDetalhesADM />} />
-        
-
-        
-        {/* Rotas de CRUD (provavelmente acedidas a partir do /admin) */}
-        <Route path="/admin/adicionar-filme" element={<TelaAdicionarFilmes />} />
         <Route path="/admin/editar-filme/:id" element={<TelaEdicaoFilmes />} />
+        {/* Rota para a tela de detalhes do Admin (da Etapa 3) */}
+        <Route path="/admin/filme/:id" element={<TelaDetalhesADM />} />
 
-        {/* Adicione uma rota "fallback" para URLs não encontradas */}
+        {/* Rota "fallback" para URLs não encontradas */}
         <Route path="*" element={<h1>404 - Página Não Encontrada</h1>} />
       </Routes>
     </BrowserRouter>

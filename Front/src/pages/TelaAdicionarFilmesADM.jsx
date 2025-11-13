@@ -1,7 +1,11 @@
+// src/pages/TelaAdicionarFilmesADM.jsx (CORRIGIDO)
+
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../style/style_pages/TelaAdicionarFilmesADM.css";
+// ADICIONADO: para redirecionar o admin após o sucesso
+import { useNavigate } from "react-router-dom";
 
 export default function TelaAdicionarFilmesADM() {
   const [formData, setFormData] = useState({
@@ -11,56 +15,71 @@ export default function TelaAdicionarFilmesADM() {
     ano: "",
     genero: "",
     sinopse: "",
+    poster_url: "", // <-- CAMPO ADICIONADO
   });
-  const [poster, setPoster] = useState(null);
-  const [preview, setPreview] = useState(null);
+  
+  // (Estados 'poster' e 'preview' removidos)
+  
   const [mensagem, setMensagem] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate(); // <-- ADICIONADO
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setPoster(file);
-    setPreview(URL.createObjectURL(file));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensagem("");
+    setError("");
 
     try {
-      const token = localStorage.getItem("token");
-      const form = new FormData();
+      const token = localStorage.getItem("authToken"); // Corrigido para 'authToken' (como no login)
+      if (!token) {
+        setError("Acesso negado. Faça login.");
+        return;
+      }
 
-      for (let key in formData) form.append(key, formData[key]);
-      if (poster) form.append("poster", poster);
-
-      const response = await fetch("http://localhost:8000/filmes", {
+      // --- CORREÇÃO DE LÓGICA ---
+      // Mapeia os nomes do formulário para os nomes que o backend espera
+      // (ex: 'genero' vira 'generos_texto')
+      const dadosParaEnviar = {
+        titulo: formData.titulo,
+        ano: formData.ano,
+        sinopse: formData.sinopse,
+        poster_url: formData.poster_url, // <-- CAMPO OBRIGATÓRIO
+        generos_texto: formData.genero,
+        diretores_texto: formData.diretor,
+        atores_texto: formData.atores,
+      };
+      
+      // Chama a NOVA ROTA DE ADMIN
+      const response = await fetch("http://localhost:8000/admin/filmes", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json", // <-- CORRIGIDO (JSON, não FormData)
         },
-        body: form,
+        body: JSON.stringify(dadosParaEnviar), // <-- CORRIGIDO
       });
+      // --- FIM DA CORREÇÃO ---
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.erro || "Erro ao adicionar filme.");
 
-      setMensagem("✅ Filme adicionado com sucesso!");
+      setMensagem("✅ Filme adicionado e publicado com sucesso!");
+      
+      // Limpa o formulário
       setFormData({
-        titulo: "",
-        diretor: "",
-        atores: "",
-        ano: "",
-        genero: "",
-        sinopse: "",
+        titulo: "", diretor: "", atores: "", ano: "", genero: "", sinopse: "", poster_url: "",
       });
-      setPoster(null);
-      setPreview(null);
-    } catch {
-      setMensagem("❌ Não foi possível adicionar o filme.");
+      
+      // Redireciona o admin de volta ao painel
+      setTimeout(() => navigate("/admin"), 2000);
+
+    } catch (err) {
+      setError(`❌ Não foi possível adicionar o filme: ${err.message}`);
+      setMensagem(""); // Limpa msg de sucesso se houver
     }
   };
 
@@ -84,6 +103,20 @@ export default function TelaAdicionarFilmesADM() {
                   name="titulo"
                   placeholder="Título do filme..."
                   value={formData.titulo}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+              
+              {/* --- CAMPO NOVO (Poster URL) --- */}
+              {/* Este campo substitui o upload de arquivo */}
+              <label>
+                URL do Pôster *
+                <input
+                  type="text"
+                  name="poster_url"
+                  placeholder="https://link.com/imagem.jpg..."
+                  value={formData.poster_url}
                   onChange={handleChange}
                   required
                 />
@@ -151,35 +184,14 @@ export default function TelaAdicionarFilmesADM() {
 
             {/* Coluna direita */}
             <aside className="coluna-direita">
-              <div className="upload-container">
-                {preview ? (
-                  <img
-                    src={preview}
-                    alt="Pré-visualização do pôster"
-                    className="poster-preview"
-                  />
-                ) : (
-                  <>
-                    <span className="icone-upload">⬆️</span>
-                    <p>Faça upload do pôster do filme (formato vertical)</p>
-                  </>
-                )}
-                <label className="btn-upload">
-                  Anexar Arquivo
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    hidden
-                  />
-                </label>
-              </div>
-
+              {/* O upload foi removido e trocado pelo campo 'poster_url' */}
+              {/* Você pode adicionar uma imagem estática aqui se quiser */}
               <button type="submit" className="btn-enviar">
                 Adicionar Filme
               </button>
 
-              {mensagem && <p className="mensagem-status">{mensagem}</p>}
+              {mensagem && <p className="mensagem-status sucesso">{mensagem}</p>}
+              {error && <p className="mensagem-status erro">{error}</p>}
             </aside>
           </form>
         </section>

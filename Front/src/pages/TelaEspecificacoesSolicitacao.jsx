@@ -1,3 +1,5 @@
+// src/pages/TelaEspecificacoesSolicitacao.jsx (CORRIGIDO)
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -9,85 +11,117 @@ export default function TelaEspecificacoesSolicitacao() {
   const navigate = useNavigate();
 
   const [solicitacao, setSolicitacao] = useState(null);
-  const [poster, setPoster] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [mensagem, setMensagem] = useState("");
+  const [error, setError] = useState("");
 
-  // === Carrega a solicitação específica ===
+  // === 1. CORREÇÃO: Carrega a solicitação específica ===
   useEffect(() => {
     const fetchSolicitacao = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/solicitacoes/${id}`);
-        if (!response.ok) throw new Error("Falha ao buscar a solicitação.");
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          setError("Acesso negado. Faça login como administrador.");
+          return;
+        }
+
+        // Chama a nova rota GET do backend que criamos
+        const response = await fetch(`http://localhost:8000/admin/solicitacoes/${id}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.erro || "Falha ao buscar a solicitação.");
+        }
+        
         const data = await response.json();
         setSolicitacao(data);
-      } catch (error) {
-        console.error("Erro ao carregar a solicitação:", error);
-        setMensagem("❌ Erro ao carregar os dados da solicitação.");
+
+      } catch (err) {
+        console.error("Erro ao carregar a solicitação:", err);
+        setError(`❌ Erro ao carregar os dados: ${err.message}`);
       }
     };
 
     fetchSolicitacao();
   }, [id]);
 
-  // === Manipula o upload de pôster ===
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPoster(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
-  // === Aceita a solicitação e cadastra o filme ===
+  // === 2. CORREÇÃO: Aceita a solicitação ===
   const handleAceitar = async () => {
+    setError("");
+    setMensagem("");
+
     try {
-      const token = localStorage.getItem("token");
-      const formData = new FormData();
+      const token = localStorage.getItem("authToken");
+      if (!token) throw new Error("Acesso negado. Faça login.");
 
-      // Adiciona os campos da solicitação
-      Object.entries(solicitacao).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-
-      if (poster) formData.append("poster", poster);
-
-      const response = await fetch("http://localhost:8000/filmes", {
-        method: "POST",
+      // Chama a rota PUT correta para aprovar
+      const response = await fetch(`http://localhost:8000/admin/aprovar/${id}`, {
+        method: "PUT",
         headers: {
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
+          // Não precisa de 'body', o backend só precisa do ID da solicitação
         },
-        body: formData,
       });
 
-      if (!response.ok) throw new Error("Erro ao aceitar o filme.");
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.erro || "Erro ao aceitar o filme.");
 
-      setMensagem("✅ Filme adicionado com sucesso!");
+      setMensagem("✅ Filme aprovado e publicado com sucesso!");
       setTimeout(() => navigate("/admin/notificacoes"), 2000);
-    } catch (error) {
-      console.error(error);
-      setMensagem("❌ Não foi possível aceitar o filme.");
+
+    } catch (err) {
+      console.error(err);
+      setError(`❌ Não foi possível aprovar o filme: ${err.message}`);
     }
   };
 
-  // === Exclui a solicitação ===
-  const handleDeletar = async () => {
+  // === 3. CORREÇÃO: Rejeita (Deleta) a solicitação ===
+  const handleRejeitar = async () => {
+    setError("");
+    setMensagem("");
+    
+    if (!window.confirm("Tem certeza que deseja REJEITAR esta solicitação?")) return;
+
     try {
-      const response = await fetch(`http://localhost:8000/solicitacoes/${id}`, {
-        method: "DELETE",
+      const token = localStorage.getItem("authToken");
+      if (!token) throw new Error("Acesso negado. Faça login.");
+
+      // Chama a nova rota PUT que criamos para rejeitar
+      const response = await fetch(`http://localhost:8000/admin/rejeitar/${id}`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
       });
 
-      if (!response.ok) throw new Error("Erro ao excluir a solicitação.");
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.erro || "Erro ao rejeitar a solicitação.");
 
-      setMensagem("🗑️ Solicitação excluída com sucesso!");
+      setMensagem("🗑️ Solicitação rejeitada com sucesso!");
       setTimeout(() => navigate("/admin/notificacoes"), 2000);
-    } catch (error) {
-      console.error(error);
-      setMensagem("❌ Erro ao excluir a solicitação.");
+
+    } catch (err) {
+      console.error(err);
+      setError(`❌ Erro ao rejeitar a solicitação: ${err.message}`);
     }
   };
 
   // === Estado de carregamento ===
+  if (error) {
+    return (
+      <div className="telaEspecificacoesSolicitacao">
+        <Header />
+        <main className="mainEspecificacoesSolicitacao">
+          <p className="carregando erro" role="alert">{error}</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   if (!solicitacao) {
     return (
       <div className="telaEspecificacoesSolicitacao">
@@ -102,6 +136,7 @@ export default function TelaEspecificacoesSolicitacao() {
     );
   }
 
+  // === RENDERIZAÇÃO CORRIGIDA ===
   return (
     <div className="telaEspecificacoesSolicitacao">
       <Header />
@@ -111,48 +146,35 @@ export default function TelaEspecificacoesSolicitacao() {
           className="containerSolicitacao"
           aria-labelledby="titulo-detalhes-solicitacao"
         >
-          {/* Upload do pôster */}
+          {/* 4. CORREÇÃO: Exibe o pôster sugerido, em vez de pedir upload */}
           <aside
             className="uploadContainer"
-            aria-label="Upload de pôster do filme"
+            aria-label="Pôster sugerido pelo usuário"
           >
-            {preview ? (
+            {solicitacao.poster_url ? (
               <img
-                src={preview}
+                src={solicitacao.poster_url}
                 alt={`Prévia do pôster de ${solicitacao.titulo}`}
                 className="posterPreview"
               />
             ) : (
-              <>
-                <span className="iconeUpload" aria-hidden="true">
-                  ⬆️
-                </span>
-                <p>Faça upload do pôster do filme (formato vertical)</p>
-              </>
+              <p>Usuário não forneceu um pôster.</p>
             )}
-
-            <label className="btnUpload" htmlFor="uploadPoster">
-              Anexar Arquivo
-            </label>
-            <input
-              id="uploadPoster"
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              hidden
-            />
           </aside>
 
           {/* Detalhes do filme */}
           <article className="detalhesSolicitacao">
             <h1 id="titulo-detalhes-solicitacao">{solicitacao.titulo}</h1>
+            <p>
+              <strong>Solicitado por:</strong> {solicitacao.solicitado_por_nome || `Usuário ID: ${solicitacao.solicitado_por_id}`}
+            </p>
             <p className="sinopse">{solicitacao.sinopse}</p>
 
             <p>
-              <strong>Atores:</strong> {solicitacao.atores || "Não informado"}
+              <strong>Atores:</strong> {solicitacao.atores_texto || "Não informado"}
             </p>
             <p>
-              <strong>Diretor:</strong> {solicitacao.diretor || "Não informado"}
+              <strong>Diretor:</strong> {solicitacao.diretores_texto || "Não informado"}
             </p>
             <p>
               <strong>Data de lançamento:</strong>{" "}
@@ -160,7 +182,7 @@ export default function TelaEspecificacoesSolicitacao() {
             </p>
 
             <div className="generos" aria-label="Gêneros do filme">
-              {solicitacao.genero?.split(",").map((g, i) => (
+              {solicitacao.generos_texto?.split(",").map((g, i) => (
                 <span key={i} className="tagGenero">
                   {g.trim()}
                 </span>
@@ -171,15 +193,15 @@ export default function TelaEspecificacoesSolicitacao() {
             <div className="botoesAcoes">
               <button
                 className="btnDeletar"
-                onClick={handleDeletar}
-                aria-label="Excluir solicitação"
+                onClick={handleRejeitar} // <-- Corrigido
+                aria-label="Rejeitar solicitação"
               >
-                Deletar
+                Rejeitar
               </button>
 
               <button
                 className="btnAceitar"
-                onClick={handleAceitar}
+                onClick={handleAceitar} // <-- Corrigido
                 aria-label="Aceitar e adicionar filme"
               >
                 Aceitar Filme

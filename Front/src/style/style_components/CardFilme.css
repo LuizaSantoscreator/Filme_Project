@@ -1,5 +1,7 @@
+/* src/style/style_components/CardFilme.css (CORRIGIDO) */
+
 .card-filme {
-  background-color: #0d405a;
+  background-color: #0d405a !important; /* <-- ADICIONADO */
   border-radius: 20px;
   overflow: hidden;
   text-align: center;
@@ -26,7 +28,7 @@
 }
 
 .card-botao {
-  background-color: #e1b287;
+  background-color: #e1b287 !important; /* <-- ADICIONADO */
   color: #000;
   border: none;
   border-radius: 20px;

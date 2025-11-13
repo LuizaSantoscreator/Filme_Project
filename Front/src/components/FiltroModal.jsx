@@ -1,3 +1,5 @@
+// src/components/FiltroModal.jsx (CORRIGIDO)
+
 import React, { useEffect } from "react";
 import "../style/style_components/FiltroModal.css";
 
@@ -23,12 +25,17 @@ export default function FiltroModal({ isOpen, onClose, onApply }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
+    
+    // Pega o valor do ano e remove espaços em branco
+    const anoValor = data.get("ano").trim();
+
     const filtros = {
       generos: data.getAll("generos"),
       atores: data.get("atores"),
       diretor: data.get("diretor"),
-      ano: data.get("ano"),
+      ano: anoValor || null, // Envia 'null' se o campo estiver vazio
     };
+    
     onApply(filtros);
     onClose();
   };
@@ -47,7 +54,7 @@ export default function FiltroModal({ isOpen, onClose, onApply }) {
         <form onSubmit={handleSubmit} className="filtro-form">
           <h2 className="filtro-titulo">Filtrar por:</h2>
 
-          {/* --- GÊNEROS --- */}
+          {/* --- GÊNEROS (sem alteração) --- */}
           <div className="filtro-generos">
             {[
               "Romance",
@@ -72,7 +79,7 @@ export default function FiltroModal({ isOpen, onClose, onApply }) {
             ))}
           </div>
 
-          {/* --- CAMPOS DE BUSCA --- */}
+          {/* --- CAMPOS DE BUSCA (sem alteração) --- */}
           <div className="filtro-campo">
             <label htmlFor="atores">Pesquise por:</label>
             <input
@@ -93,16 +100,19 @@ export default function FiltroModal({ isOpen, onClose, onApply }) {
             />
           </div>
 
+          {/* --- CAMPO DE ANO (CORRIGIDO) --- */}
+          {/* Trocamos o <select> por um <input> */}
           <div className="filtro-campo">
-            <label htmlFor="ano">Pesquise por:</label>
-            <select id="ano" name="ano">
-              <option value="">Data de lançamento</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="antigo">Anterior a 2020</option>
-            </select>
+            <label htmlFor="ano">Pesquise por ano:</label>
+            <input
+              type="number" // 'number' é melhor para ano (mostra teclado numérico no mobile)
+              id="ano"
+              name="ano"
+              placeholder="Ex: 1997"
+              // O CSS já pega '.filtro-campo input'
+            />
           </div>
+          {/* --- FIM DA CORREÇÃO --- */}
 
           <div className="filtro-botoes">
             <button type="submit" className="btn-aplicar">

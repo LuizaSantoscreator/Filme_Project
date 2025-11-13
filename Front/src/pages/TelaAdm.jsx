@@ -1,3 +1,5 @@
+// src/pages/TelaAdm.jsx (CORRIGIDO)
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -29,16 +31,15 @@ export default function TelaAdm() {
 
         {/* SEÇÃO DE BOTÕES */}
         <section className="adm-botoes" aria-label="Ações do administrador">
+          
+          {/* --- CORREÇÃO: O link agora bate com a Rota do App.jsx --- */}
           <button
             className="adm-btn"
-            // Este caminho está diferente no seu App.jsx, verifique se /admin/adicionar-filme não é o correto.
-            onClick={() => navigate("/adicionar-filmes")}
+            onClick={() => navigate("/admin/adicionar-filme")} // <-- CORRIGIDO
           >
             Adicionar Filmes
           </button>
-
-          {/* --- BOTÃO CORRIGIDO --- */}
-          {/* O caminho foi atualizado para '/admin/notificacoes' */}
+          
           <button
             className="adm-btn"
             onClick={() => navigate("/admin/notificacoes")}
@@ -46,9 +47,9 @@ export default function TelaAdm() {
             Solicitações de Filmes
           </button>
 
+          {/* Este link agora funciona, pois o App.jsx está correto */}
           <button
             className="adm-btn"
-            // Este caminho também está no seu App.jsx
             onClick={() => navigate("/admin/visualizar-filmes")}
           >
             Visualizar Filmes

@@ -10,10 +10,24 @@
   margin-bottom: 1.5rem;
 }
 
+/* Em SecaoFilmes.css (CORRIGIDO) */
+
 .lista-filmes {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
+  
+  /* --- NOVO: Limita a largura do container --- */
+  max-width: 1200px; /* Largura máxima da grade */
+  margin: 0 auto;    /* Centraliza a grade */
+  
+  /* NOVO: Impede que itens únicos se estiquem demais */
+  justify-content: flex-start; 
+}
+
+/* NOVO: Regra para evitar que um único item tome 100% da largura em telas grandes */
+.lista-filmes > * {
+    max-width: 300px; 
 }
 
 .mensagem-vazia {

@@ -1,5 +1,3 @@
-// src/pages/TelaLogin.jsx (CORRIGIDO)
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../style/style_pages/TelaLogin.css'; 

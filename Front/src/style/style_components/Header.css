@@ -1,8 +1,4 @@
-/* ==============================
-   NAVBAR - Estilo Principal
-   ============================== */
-
-   .navbar {
+.navbar {
     width: 100%;
     background-color: #062f44;
     color: #fff;
@@ -22,7 +18,7 @@
     margin: 0 auto;
   }
   
-  /* LOGO */
+
   .navbar-logo a {
     text-decoration: none;
     color: #fff;
@@ -30,7 +26,7 @@
     font-size: 1.3rem;
   }
   
-  /* LINKS */
+
   .navbar-links {
     display: flex;
     gap: 1.5rem;
@@ -46,8 +42,7 @@
   .navbar-links a:hover {
     color: #f0c08f;
   }
-  
-  /* PESQUISA */
+
   .navbar-search {
     display: flex;
     align-items: center;
@@ -78,28 +73,23 @@
   .navbar-search button:hover {
     background-color: #ffb565;
   }
-  
-  /* MENU (para responsividade futura) */
+
   .navbar-menu {
     display: none;
     cursor: pointer;
     font-size: 1.5rem;
   }
   
-  /* --- ESTILOS DO ÍCONE DE PERFIL (NOVO) --- */
-  
-  /* Container do Ícone */
+
   .navbar-perfil-container {
       position: relative;
-      /* Garante que o container se ajuste */
       display: inline-block; 
   }
-  
-  /* Botão do Ícone */
+
   .navbar-perfil-icon {
       background-color: #f0c08f;
       border: none;
-      border-radius: 50%; /* Faz o ícone ser um círculo */
+      border-radius: 50%;
       width: 35px;
       height: 35px;
       cursor: pointer;
@@ -110,10 +100,10 @@
       font-weight: 700;
   }
   
-  /* Dropdown Menu */
+
   .navbar-perfil-dropdown {
       position: absolute;
-      top: 45px; /* Ajuste para descer um pouco do ícone */
+      top: 45px;
       right: 0;
       background-color: #062f44;
       border: 1px solid #f0c08f;
@@ -125,8 +115,7 @@
       z-index: 150;
       padding: 8px 0;
   }
-  
-  /* Estilo dos Links e Botões dentro do Dropdown */
+
   .navbar-perfil-dropdown a, 
   .navbar-perfil-dropdown button {
       padding: 10px 15px;
@@ -139,7 +128,7 @@
       transition: background-color 0.2s;
       font-size: 0.95rem;
       font-weight: 500;
-      line-height: 1; /* Alinha melhor o texto */
+      line-height: 1; 
   }
   
   .navbar-perfil-dropdown a:hover, 
@@ -147,9 +136,7 @@
       background-color: #0e3a4d;
   }
   
-  /* --- FIM DOS ESTILOS DO PERFIL --- */
-  
-  /* RESPONSIVO */
+
   @media (max-width: 900px) {
     .navbar-links {
       display: none;

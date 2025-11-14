@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SecaoFilmes from "../components/SecaoFilmes";
 import FiltroModal from "../components/FiltroModal";
 import "../style/style_pages/TelaFilmes.css";
 import imagemTitanic from "../assets/imagem_titanic.png";
-import { Link } from "react-router-dom";
+import imagemLobo from "../assets/imagem_lobo_wall_streats.png";
 
 function TelaFilmes() {
   const [filmes, setFilmes] = useState([]);
@@ -15,32 +16,49 @@ function TelaFilmes() {
   const [busca, setBusca] = useState("");
   const [triggerFetch, setTriggerFetch] = useState(0);
 
-  
+  // Hook para ler a URL atual e extrair os parâmetros de busca
+  const location = useLocation();
+
+  // Escuta a URL para termos de busca
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const termoBuscaURL = query.get('titulo'); // Pega o valor de '?titulo='
+
+    if (termoBuscaURL) {
+      // Se houver um termo de busca na URL, usa ele
+      setBusca(termoBuscaURL);
+      setFiltros(null);  // Limpa filtros
+      setTriggerFetch(t => t + 1); // Força uma nova busca
+    } else if (!busca && !filtros && location.search) {
+      // Caso a URL seja limpa, mas os estados não, garante que a busca seja zerada
+      setTriggerFetch(t => t + 1);
+    }
+  }, [location.search]);  // Executa sempre que a query string mudar
+
+  // Hook para buscar filmes do backend
   useEffect(() => {
     const fetchFilmes = async () => {
       let url = "";
       const params = new URLSearchParams();
 
+      // Adiciona o termo de busca (se houver)
       if (busca) {
         params.append('titulo', busca);
       }
 
+      // Adiciona os filtros (se houver)
       if (filtros) {
-        
         if (filtros.generos && filtros.generos.length > 0) {
-         
-          params.append('genero', filtros.generos[0]); 
+          params.append('genero', filtros.generos[0]); // Apenas o primeiro gênero
         }
-
         if (filtros.ano) {
           params.append('ano', filtros.ano);
         }
         if (filtros.diretor) {
           params.append('diretor', filtros.diretor);
         }
-
-        if (filtros.atores) { 
-          params.append('ator', filtros.atores); 
+        if (filtros.atores) {
+          params.append('ator', filtros.atores);
         }
       }
 
@@ -49,48 +67,49 @@ function TelaFilmes() {
       if (queryString) {
         url = `http://localhost:8000/filmes/buscar?${queryString}`;
       } else {
-        url = "http://localhost:8000/filmes";
+        url = "http://localhost:8000/filmes"; // Se não houver filtros, busca todos os filmes
       }
-      
+
       console.log("Buscando na URL:", url);
 
       try {
         const response = await fetch(url);
         if (!response.ok) {
-           const data = await response.json();
-           throw new Error(data.erro || "Erro ao carregar filmes.");
+          const data = await response.json();
+          throw new Error(data.erro || "Erro ao carregar filmes.");
         }
         const data = await response.json();
-        
+
         setFilmes(data);
-        if(data.length === 0) {
+        if (data.length === 0) {
           setErro("Nenhum filme encontrado com esses critérios.");
         } else {
-          setErro("");
+          setErro(""); // Limpa o erro se encontrar filmes
         }
 
       } catch (error) {
         console.error(error);
-        setFilmes([]); 
+        setFilmes([]);
         setErro(`Não foi possível carregar os filmes: ${error.message}`);
       }
     };
-    
-    fetchFilmes();
-    
-  }, [triggerFetch, busca, filtros]); 
 
+    fetchFilmes();
+  }, [triggerFetch, busca, filtros]); // Recarrega sempre que 'triggerFetch', 'busca' ou 'filtros' mudarem
+
+  // Função para aplicar filtros
   const aplicarFiltros = (filtrosSelecionados) => {
     setFiltros(filtrosSelecionados);
-    setBusca(""); 
-    setTriggerFetch(t => t + 1); 
-    setModalAberto(false);
+    setBusca("");  // Limpa o campo de busca ao aplicar filtros
+    setTriggerFetch(t => t + 1); // Força a requisição de filmes com filtros aplicados
+    setModalAberto(false); // Fecha o modal de filtros
   };
 
+  // Função para buscar filmes ao submeter o formulário de busca
   const handleBuscar = (e) => {
     e.preventDefault();
-    setFiltros(null);
-    setTriggerFetch(t => t + 1); 
+    setFiltros(null);  // Limpa os filtros ao fazer uma busca
+    setTriggerFetch(t => t + 1); // Dispara nova requisição de filmes
   };
 
   return (
@@ -105,14 +124,14 @@ function TelaFilmes() {
         <div className="conteudo-banner">
           <h1>TITANIC</h1>
           <p className="descricao-banner">
-            Um épico de James Cameron sobre amor, classe e destino a bordo do
-            Titanic.
+            Um épico de James Cameron sobre amor, classe e destino a bordo do Titanic.
           </p>
           <Link to="/filmes/4" className="btn-principal">
             Saiba Mais
           </Link>
         </div>
       </section>
+
       <section className="filtro-section" aria-label="Busca e filtros de filmes">
         <form className="filtro-container" onSubmit={handleBuscar}>
           <input
@@ -130,7 +149,7 @@ function TelaFilmes() {
             className="btn-filtro"
             onClick={() => setModalAberto(true)}
           >
-            Filtros
+             Filtros
           </button>
         </form>
       </section>

@@ -1,12 +1,6 @@
-/* * SCRIPT DE POPULAÇÃO (DEMONSTRAÇÃO)
- * Adiciona 20 filmes aprovados ao banco 'filminis_db'.
- */
 
--- 1. Garante que estamos usando o banco de dados correto
 USE filminis_db;
 
--- 2. Popula as tabelas de Catálogo (Gêneros, Diretores, Atores)
--- Usamos INSERT IGNORE para não dar erro se o nome já existir.
 
 INSERT IGNORE INTO generos (nome) VALUES 
 ('Ação'), ('Aventura'), ('Ficção Científica'), ('Drama'), ('Comédia'), 
@@ -28,11 +22,7 @@ INSERT IGNORE INTO atores (nome) VALUES
 ('Timothée Chalamet'), ('Zendaya'), ('Daniel Kaluuya'), ('Emma Stone'), 
 ('Robert De Niro'), ('Al Pacino'), ('Kate Winslet'), ('Tim Robbins'), ('Morgan Freeman');
 
--- 3. Adiciona os 20 filmes e suas relações
--- Usamos LAST_INSERT_ID() para pegar o ID do filme que acabamos de criar
--- e usá-lo para popular as tabelas de ligação.
 
--- Filme 1: O Cavaleiro das Trevas
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'O Cavaleiro das Trevas', 2008, 
@@ -48,7 +38,6 @@ INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES
 INSERT INTO filmes_atores (filme_id, ator_id) VALUES 
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Christian Bale'));
 
--- Filme 2: Pulp Fiction
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Pulp Fiction: Tempo de Violência', 1994, 
@@ -66,7 +55,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Uma Thurman')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Samuel L. Jackson'));
 
--- Filme 3: O Lobo de Wall Street
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'O Lobo de Wall Street', 2013, 
@@ -84,7 +72,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Leonardo DiCaprio')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Margot Robbie'));
 
--- Filme 4: Titanic
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Titanic', 1997, 
@@ -101,7 +88,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Leonardo DiCaprio')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Kate Winslet'));
 
--- Filme 5: A Origem (Inception)
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'A Origem', 2010, 
@@ -117,7 +103,6 @@ INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES
 INSERT INTO filmes_atores (filme_id, ator_id) VALUES 
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Leonardo DiCaprio'));
 
--- Filme 6: Vingadores: Guerra Infinita
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Vingadores: Guerra Infinita', 2018, 
@@ -136,7 +121,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Chris Evans')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Scarlett Johansson'));
 
--- Filme 7: Avatar: O Caminho da Água
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Avatar: O Caminho da Água', 2022, 
@@ -150,7 +134,6 @@ INSERT INTO filmes_generos (filme_id, genero_id) VALUES
 INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES 
     (@filme_id, (SELECT id FROM diretores WHERE nome = 'James Cameron'));
 
--- Filme 8: Nós
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Nós', 2019, 
@@ -166,7 +149,6 @@ INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES
 INSERT INTO filmes_atores (filme_id, ator_id) VALUES 
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Daniel Kaluuya'));
 
--- Filme 9: A Menina e o Dragão (Raya e o Último Dragão)
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'A Menina e o Dragão', 2021, 
@@ -179,7 +161,6 @@ INSERT INTO filmes_generos (filme_id, genero_id) VALUES
     (@filme_id, (SELECT id FROM generos WHERE nome = 'Aventura')),
     (@filme_id, (SELECT id FROM generos WHERE nome = 'Fantasia'));
 
--- Filme 10: Barbie
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Barbie', 2023, 
@@ -196,7 +177,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Margot Robbie')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Ryan Gosling'));
 
--- Filme 11: Oppenheimer
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Oppenheimer', 2023, 
@@ -213,7 +193,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Cillian Murphy')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Robert Downey Jr.'));
 
--- Filme 12: Parasita
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Parasita', 2019, 
@@ -229,7 +208,6 @@ INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES
 INSERT INTO filmes_atores (filme_id, ator_id) VALUES 
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Song Kang-ho'));
 
--- Filme 13: John Wick
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'John Wick: De Volta ao Jogo', 2014, 
@@ -245,7 +223,6 @@ INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES
 INSERT INTO filmes_atores (filme_id, ator_id) VALUES 
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Keanu Reeves'));
 
--- Filme 14: Homem de Ferro
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Homem de Ferro', 2008, 
@@ -261,7 +238,6 @@ INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES
 INSERT INTO filmes_atores (filme_id, ator_id) VALUES 
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Robert Downey Jr.'));
 
--- Filme 15: Coringa
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Coringa', 2019, 
@@ -277,7 +253,6 @@ INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES
 INSERT INTO filmes_atores (filme_id, ator_id) VALUES 
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Joaquin Phoenix'));
 
--- Filme 16: La La Land
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'La La Land: Cantando Estações', 2016, 
@@ -295,7 +270,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Ryan Gosling')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Emma Stone'));
 
--- Filme 17: Matrix
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Matrix', 1999, 
@@ -313,7 +287,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Keanu Reeves')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Laurence Fishburne'));
 
--- Filme 18: Duna
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Duna', 2021, 
@@ -331,7 +304,6 @@ INSERT INTO filmes_atores (filme_id, ator_id) VALUES
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Timothée Chalamet')),
     (@filme_id, (SELECT id FROM atores WHERE nome = 'Zendaya'));
 
--- Filme 19: Gladiador
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Gladiador', 2000, 
@@ -345,7 +317,6 @@ INSERT INTO filmes_generos (filme_id, genero_id) VALUES
 INSERT INTO filmes_diretores (filme_id, diretor_id) VALUES 
     (@filme_id, (SELECT id FROM diretores WHERE nome = 'Ridley Scott'));
 
--- Filme 20: Um Sonho de Liberdade
 INSERT INTO filmes (titulo, ano, sinopse, poster_url)
 VALUES (
     'Um Sonho de Liberdade', 1994, 

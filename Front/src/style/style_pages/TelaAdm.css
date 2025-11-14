@@ -8,7 +8,6 @@
   flex-direction: column;
 }
 
-/* --- SEÇÃO HERO --- */
 .adm-hero {
   background: linear-gradient(180deg, #0e3a4d 0%, #042b3b 100%);
   display: flex;
@@ -33,7 +32,6 @@
   height: auto;
 }
 
-/* --- BOTÕES --- */
 .adm-botoes {
   background-color: #ffffff;
   display: flex;
@@ -63,7 +61,6 @@
   transform: translateY(-5px);
 }
 
-/* --- RESPONSIVIDADE --- */
 @media (max-width: 1024px) {
   .adm-hero {
     padding: 2.5rem 3rem;

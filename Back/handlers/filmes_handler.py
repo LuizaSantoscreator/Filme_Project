@@ -5,11 +5,7 @@ from utils.response_utils import parse_json_body, send_json_response, send_error
 import mysql.connector
 
 def handle_get_all_filmes(handler_instance):
-    """ 
-    Lida com [GET] /filmes
-    Busca no banco todos os filmes aprovados e seus respectivos gêneros.
-    """
-    
+
     conn = get_db_connection()
     if not conn:
         send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dados).")
@@ -49,10 +45,7 @@ def handle_get_all_filmes(handler_instance):
 
 
 def handle_get_filme_by_id(handler_instance, filme_id):
-    """ 
-    Lida com [GET] /filmes/<id>
-    Busca todos os detalhes de um único filme pelo seu ID.
-    """
+
     
     conn = get_db_connection()
     if not conn:
@@ -107,17 +100,13 @@ def handle_get_filme_by_id(handler_instance, filme_id):
 
 
 def handle_create_filme(handler_instance, user_data):
-    """ 
-    Lida com [POST] /filmes - Adição de um novo filme.
-    Cria uma solicitação pendente na tabela 'solicitacoes_adicao'.
-    """
+
     
     body = parse_json_body(handler_instance)
     if not body:
         send_error_response(handler_instance, 400, "Corpo da requisição inválido ou vazio.")
         return
 
-    # Validação de campos básicos
     titulo = body.get('titulo')
     sinopse = body.get('sinopse')
     poster_url = body.get('poster_url')
@@ -165,10 +154,7 @@ def handle_create_filme(handler_instance, user_data):
 
 
 def handle_search_filmes(handler_instance):
-    """
-    Lida com [GET] /filmes/buscar?filtro=valor&filtro2=valor
-    Busca e filtra filmes com base nos parâmetros da query.
-    """
+
     
     parsed_path = urlparse(handler_instance.path)
     query_params = parse_qs(parsed_path.query)
@@ -253,12 +239,8 @@ def handle_search_filmes(handler_instance):
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
-# --- NOVO CÓDIGO ---
 def handle_edit_filme(handler_instance, filme_id, user_data):
-    """
-    Lida com [PUT] /filmes/<id> - Submissão de edição
-    Cria uma solicitação de edição para aprovação do ADM.
-    """
+
     
     body = parse_json_body(handler_instance)
     if not body:
@@ -272,11 +254,10 @@ def handle_edit_filme(handler_instance, filme_id, user_data):
         send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dados).")
         return
 
-    conn.autocommit = False # Inicia uma transação
+    conn.autocommit = False 
     cursor = conn.cursor(dictionary=True)
     
     try:
-        #Busca o filme original para pegar os valores antigos
         cursor.execute("SELECT * FROM filmes WHERE id = %s", (filme_id,))
         filme_original = cursor.fetchone()
         
@@ -284,7 +265,6 @@ def handle_edit_filme(handler_instance, filme_id, user_data):
             send_error_response(handler_instance, 404, "Filme não encontrado.")
             return
 
-        #Query para inserir na tabela de solicitações de edição
         query_insert = """
             INSERT INTO solicitacoes_edicao
             (filme_id, campo_alterado, valor_antigo, valor_novo, 
@@ -294,14 +274,13 @@ def handle_edit_filme(handler_instance, filme_id, user_data):
         
         alteracoes_enviadas = 0
         
-        #Itera sobre os campos enviados no body e compara com os originais
+
         for campo, valor_novo in body.items():
-            # ignora campos que não existem ou são IDs
+
             if campo in filme_original and campo != 'id':
                 valor_antigo = str(filme_original[campo])
                 valor_novo_str = str(valor_novo)
-                
-                # Se o valor mudou, cria a solicitação de edição
+
                 if valor_novo_str != valor_antigo:
                     cursor.execute(query_insert, (
                         filme_id,
@@ -313,18 +292,17 @@ def handle_edit_filme(handler_instance, filme_id, user_data):
                     alteracoes_enviadas += 1
 
         if alteracoes_enviadas > 0:
-            conn.commit() # Salva todas as solicitações de edição
+            conn.commit()
             send_json_response(handler_instance, 202, {
                 "mensagem": f"{alteracoes_enviadas} alterações enviadas para aprovação."
             })
         else:
-            # Se o usuário enviou dados, mas eram iguais aos antigos
             send_json_response(handler_instance, 200, {
                 "mensagem": "Nenhuma alteração detectada."
             })
 
     except mysql.connector.Error as err:
-        conn.rollback() # Desfaz a transação em caso de erro
+        conn.rollback()
         send_error_response(handler_instance, 500, f"Erro no banco de dados: {err}")
     except Exception as e:
         conn.rollback()

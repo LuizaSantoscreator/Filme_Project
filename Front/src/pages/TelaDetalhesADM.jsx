@@ -1,5 +1,3 @@
-// Salve como: src/pages/TelaDetalhesADM.jsx
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "../components/Header";

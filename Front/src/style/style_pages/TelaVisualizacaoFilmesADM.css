@@ -1,10 +1,5 @@
-/*
- * Arquivo: TelaVisualizacaoFilmes.css
- * Descrição: Estilos para a tela de admin que lista os filmes.
- */
-
 .tela-visualizacao-filmes {
-  background-color: #f4f4f4; /* Fundo cinza claro */
+  background-color: #f4f4f4; 
   color: #333;
   min-height: 100vh;
   display: flex;
@@ -19,7 +14,7 @@
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  flex-grow: 1; /* Faz o main crescer */
+  flex-grow: 1; 
 }
 
 .main-visualizacao h1 {
@@ -36,7 +31,7 @@
 
 .container-tabela {
   width: 100%;
-  overflow-x: auto; /* Permite scroll horizontal em telas pequenas */
+  overflow-x: auto;
 }
 
 .tabela-filmes {
@@ -89,12 +84,12 @@
 }
 
 .btn-editar {
-  background-color: #e8c49d; /* Bege/Dourado */
+  background-color: #e8c49d; 
   color: #333;
 }
 
 .btn-excluir {
-  background-color: #6b2b2b; /* Vermelho escuro */
+  background-color: #6b2b2b; 
   color: #ffffff;
 }
 

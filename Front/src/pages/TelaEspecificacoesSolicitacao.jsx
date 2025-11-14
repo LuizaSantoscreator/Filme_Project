@@ -37,7 +37,7 @@ export default function TelaEspecificacoesSolicitacao() {
 
       } catch (err) {
         console.error("Erro ao carregar a solicitação:", err);
-        setError(`❌ Erro ao carregar os dados: ${err.message}`);
+        setError(` Erro ao carregar os dados: ${err.message}`);
       }
     };
 
@@ -69,7 +69,7 @@ export default function TelaEspecificacoesSolicitacao() {
 
     } catch (err) {
       console.error(err);
-      setError(`❌ Não foi possível aprovar o filme: ${err.message}`);
+      setError(` Não foi possível aprovar o filme: ${err.message}`);
     }
   };
 
@@ -95,12 +95,12 @@ export default function TelaEspecificacoesSolicitacao() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.erro || "Erro ao rejeitar a solicitação.");
 
-      setMensagem("🗑️ Solicitação rejeitada com sucesso!");
+      setMensagem(" Solicitação rejeitada com sucesso!");
       setTimeout(() => navigate("/admin/notificacoes"), 2000);
 
     } catch (err) {
       console.error(err);
-      setError(`❌ Erro ao rejeitar a solicitação: ${err.message}`);
+      setError(` Erro ao rejeitar a solicitação: ${err.message}`);
     }
   };
 

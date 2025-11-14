@@ -1,4 +1,3 @@
-/* Reset global e variáveis */
 :root {
   --cor-fundo: #ffffff;
   --cor-azul-escuro: #062f44;
@@ -8,7 +7,6 @@
   --texto-secundario: #777;
 }
 
-/* Reset geral */
 html, body, #root {
   width: 100%;
   height: 100%;

@@ -1,81 +1,63 @@
-/*
- * Arquivo: LoginScreen.css
- * Descrição: Estilos para o componente LoginScreen.
- * Contém estilos para o layout geral, card de login, formulário e elementos interativos,
- * garantindo um design responsivo e acessível.
- */
-
-/* Variáveis CSS para cores e espaçamento (opcional, mas boa prática) */
 :root {
-  --primary-color: #7b2c3d; /* Cor principal para botões e links */
+  --primary-color: #7b2c3d; 
   --text-color: #333;
   --placeholder-color: #aaa;
   --border-color: #ddd;
-  --background-dark: #1a2a3a; /* Fundo escuro conforme o protótipo */
+  --background-dark: #1a2a3a; 
   --card-background: #fff;
   --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   --border-radius: 8px;
   --spacing-unit: 16px;
 }
 
-/* Estilos globais para o body, garantindo um reset básico */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background-dark); /* Fundo escuro */
-  display: flex; /* Para centralizar o conteúdo verticalmente */
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: center; /* Centraliza verticalmente */
-  min-height: 100vh; /* Garante que o body ocupe a altura total da viewport */
+  background-color: var(--background-dark); 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh;
   color: var(--text-color);
 }
 
-/* Container principal da tela de login */
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 100vh; /* Ocupa a altura total da viewport */
+  min-height: 100vh;
   padding: var(--spacing-unit);
-  box-sizing: border-box; /* Inclui padding na largura/altura */
+  box-sizing: border-box; 
 }
 
-/* Card de login - Onde a imagem e o formulário residem */
 .login-card {
-  display: flex; /* Para organizar a imagem e o formulário lado a lado */
+  display: flex;
   background-color: var(--card-background);
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);
-  overflow: hidden; /* Garante que bordas arredondadas funcionem com conteúdo */
+  overflow: hidden;
   width: 100%;
-  max-width: 900px; /* Largura máxima do card */
-  min-height: 500px; /* Altura mínima do card */
+  max-width: 900px; 
+  min-height: 500px;
 }
 
-/* Seção da imagem (lado esquerdo) */
 .login-image-section {
-  flex: 1; /* Ocupa metade do espaço disponível */
-  background-color: #f0f0f0; /* Cor de fundo provisória para a área da imagem */
-  /*
-   * Exemplo de como adicionar uma imagem de fundo via CSS:
-   * background-image: url('/path/to/your/image.jpg');
-   * background-size: cover;
-   * background-position: center;
-   * background-repeat: no-repeat;
-   */
-  display: flex; /* Para centralizar qualquer conteúdo que venha a ser adicionado */
+  flex: 1; 
+  background-color: #f0f0f0; 
+  display: flex; 
   justify-content: center;
   align-items: center;
-  min-width: 300px; /* Largura mínima para a seção da imagem em telas maiores */
+  min-width: 300px; 
 }
 
-/* Seção do formulário (lado direito) */
+
 .login-form-section {
-  flex: 1; /* Ocupa metade do espaço disponível */
-  padding: calc(2 * var(--spacing-unit)); /* Padding interno */
+  flex: 1; 
+  padding: calc(2 * var(--spacing-unit)); 
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -83,35 +65,33 @@ body {
   text-align: center;
 }
 
-/* Título de Login */
+
 .login-title {
-  font-size: 2.5em; /* Tamanho da fonte do título */
+  font-size: 2.5em; 
   margin-bottom: calc(2 * var(--spacing-unit));
   color: var(--text-color);
-  font-weight: 300; /* Mais leve conforme o protótipo */
+  font-weight: 300; 
 }
 
-/* Formulário */
+
 .login-form {
   width: 100%;
-  max-width: 300px; /* Largura máxima do formulário dentro da seção */
+  max-width: 300px; 
 }
 
-/* Grupo de formulário para input e label */
 .form-group {
   margin-bottom: var(--spacing-unit);
-  position: relative; /* Para posicionamento do ícone de olho */
+  position: relative; 
 }
 
-/* Inputs de texto */
 .form-input {
   width: 100%;
   padding: calc(0.75 * var(--spacing-unit)) var(--spacing-unit);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 1em;
-  box-sizing: border-box; /* Inclui padding e borda na largura total */
-  outline: none; /* Remove o outline padrão */
+  box-sizing: border-box; 
+  outline: none; 
 }
 
 .form-input::placeholder {
@@ -119,18 +99,16 @@ body {
 }
 
 .form-input:focus {
-  border-color: var(--primary-color); /* Realça borda ao focar */
-  box-shadow: 0 0 0 2px rgba(123, 44, 61, 0.2); /* Sombra suave ao focar */
+  border-color: var(--primary-color); 
+  box-shadow: 0 0 0 2px #7b2c3d33; 
 }
 
-/* Wrapper para o campo de senha com ícone */
 .password-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-/* Botão para mostrar/esconder senha */
 .toggle-password-visibility {
   background: none;
   border: none;
@@ -143,7 +121,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--placeholder-color); /* Cor do ícone */
+  color: var(--placeholder-color); 
 }
 
 .toggle-password-visibility:hover {
@@ -151,25 +129,24 @@ body {
 }
 
 .eye-icon {
-  font-size: 1.2em; /* Tamanho do ícone de olho */
+  font-size: 1.2em; 
 }
 
-/* Botão Conectar */
 .connect-button {
   width: 100%;
   padding: var(--spacing-unit) calc(1.5 * var(--spacing-unit));
   background-color: var(--primary-color);
-  color: var(--card-background); /* Texto branco no botão */
+  color: var(--card-background); 
   border: none;
   border-radius: var(--border-radius);
   font-size: 1.1em;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Transição suave no hover */
+  transition: background-color 0.3s ease; 
   margin-top: calc(1.5 * var(--spacing-unit));
 }
 
 .connect-button:hover {
-  background-color: #5a202d; /* Escurece um pouco no hover */
+  background-color: #5a202d; 
 }
 
 .connect-button:focus {
@@ -177,7 +154,7 @@ body {
   box-shadow: 0 0 0 3px rgba(123, 44, 61, 0.3);
 }
 
-/* Links adicionais (registro, administrador) */
+
 .login-links {
   margin-top: calc(2 * var(--spacing-unit));
   font-size: 0.9em;
@@ -190,17 +167,17 @@ body {
 
 .login-links a {
   color: var(--primary-color);
-  text-decoration: none; /* Remove sublinhado padrão */
+  text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .login-links a:hover {
-  color: #5a202d; /* Escurece a cor no hover */
-  text-decoration: underline; /* Adiciona sublinhado no hover */
+  color: #5a202d; 
+  text-decoration: underline;
 }
 
-/* Classe para esconder visualmente elementos, mas mantê-los para leitores de tela */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -213,34 +190,30 @@ body {
   border-width: 0;
 }
 
-/*
- * Media Queries para Responsividade
- * Ajusta o layout para telas menores.
- */
 @media (max-width: 768px) {
   .login-card {
-    flex-direction: column; /* Coloca a imagem e o formulário em coluna */
-    max-width: 400px; /* Reduz a largura máxima do card */
+    flex-direction: column;
+    max-width: 400px; 
   }
 
   .login-image-section {
-    min-height: 200px; /* Garante altura mínima para a imagem em mobile */
-    min-width: unset; /* Reseta largura mínima */
+    min-height: 200px; 
+    min-width: unset; 
   }
 
   .login-form-section {
-    padding: calc(1.5 * var(--spacing-unit)); /* Ajusta padding */
+    padding: calc(1.5 * var(--spacing-unit)); 
   }
 
   .login-title {
-    font-size: 2em; /* Reduz o tamanho do título */
+    font-size: 2em; 
     margin-bottom: var(--spacing-unit);
   }
 }
 
 .login-error-message {
-  color: #d9534f; /* Um tom de vermelho */
-  background-color: #f2dede; /* Fundo rosa claro */
+  color: #d9534f; 
+  background-color: #f2dede; 
   border: 1px solid #ebccd1;
   border-radius: var(--border-radius);
   padding: 10px;

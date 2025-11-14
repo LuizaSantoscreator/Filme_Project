@@ -1,12 +1,10 @@
 // src/pages/TelaLogin.jsx (CORRIGIDO)
 
 import React, { useState } from 'react';
-// --- 1. ADICIONE O IMPORT DO LINK ---
 import { useNavigate, Link } from 'react-router-dom';
 import '../style/style_pages/TelaLogin.css'; 
 
 function TelaLogin() {
-  // ... (toda a sua lógica 'handleLoginSubmit', etc. continua igual) ...
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -37,7 +35,6 @@ function TelaLogin() {
       if (data.usuario.role === 'adm') {
         navigate('/admin'); 
       } else {
-        // Redireciona o usuário comum para a /home (TelaInicial)
         navigate('/home'); 
       }
     } catch (err) {
@@ -55,27 +52,24 @@ function TelaLogin() {
         <div className="login-form-section">
           <h1 className="login-title">Login</h1>
           <form className="login-form" aria-labelledby="login-title" onSubmit={handleLoginSubmit}>
-            {/* ... (seus inputs de formulário) ... */}
             <div className="form-group">
-              <label htmlFor="email" className="sr-only">Email (Usuário)</label>
+              <label htmlFor="email" className="sr-only">Email</label>
               <input type="email" id="email" className="form-input" placeholder="Usuário (Email)" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="form-group">
               <label htmlFor="password" className="sr-only">Senha</label>
               <input type="password" id="password" className="form-input" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
-              {/* Você pode adicionar o botão de olho aqui */}
             </div>
             {errorMsg && (<div className="login-error-message" role="alert">{errorMsg}</div>)}
             <button type="submit" className="connect-button">Conectar</button>
           </form>
 
-          {/* --- 2. CORREÇÃO AQUI --- */}
           <div className="login-links">
             <p>
-              Não tem login? <Link to="/">Clique aqui</Link> {/* <-- MUDADO: <a href="/cadastro"> para <Link to="/"> (rota raiz) */}
+              Não tem login? <Link to="/">Clique aqui</Link> 
             </p>
             <p>
-              Administrador? <Link to="/login-adm">Clique aqui!</Link> {/* <-- MUDADO: <a href="/admin/login"> para <Link to="/login-adm"> */}
+              Administrador? <Link to="/login-adm">Clique aqui!</Link>
             </p>
           </div>
 

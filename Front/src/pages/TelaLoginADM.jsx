@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-// Corrigindo o caminho do CSS para sua estrutura de pastas [cite: image_341127.png]
 import '../style/style_pages/TelaLogin.css'; 
 
-/**
- * Componente funcional para a tela de Login de Administrador.
- * Somente permite o login se o backend confirmar que o usuário
- * tem o 'role' de 'adm'.
- */
 function TelaLoginADM() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
-
-  /**
-   * Lida com a submissão do formulário de login.
-   */
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
     setErrorMsg('');
@@ -27,7 +17,6 @@ function TelaLoginADM() {
     }
 
     try {
-      // 1. A requisição é a MESMA da TelaLogin [cite: TelaLogin.jsx]
       const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
         headers: {
@@ -45,16 +34,12 @@ function TelaLoginADM() {
         throw new Error(data.erro || 'Falha ao tentar fazer login.');
       }
 
-      // --- VERIFICAÇÃO DE ADMIN ---
-      // 2. Verificamos o 'role' que o backend retornou [cite: auth_handler.py]
       if (data.usuario.role === 'adm') {
-        // SUCESSO
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('userData', JSON.stringify(data.usuario));
         console.log('Login de ADM bem-sucedido!', data);
-        navigate('/admin'); // Redireciona para a dashboard de admin
+        navigate('/admin'); 
       } else {
-        // FALHA (Usuário é 'comum')
         setErrorMsg('Acesso negado. Esta página é apenas para administradores.');
       }
 
@@ -67,13 +52,10 @@ function TelaLoginADM() {
   return (
     <div className="login-container">
       <div className="login-card" role="main">
-        {/* Lado esquerdo (Imagem) */}
         <div className="login-image-section" aria-label="Espaço para imagem">
         </div>
 
-        {/* Lado direito (Formulário) */}
         <div className="login-form-section">
-          {/* Título alterado */}
           <h1 className="login-title">Login (Admin)</h1>
 
           <form className="login-form" aria-labelledby="login-title" onSubmit={handleLoginSubmit}>
@@ -126,7 +108,6 @@ function TelaLoginADM() {
             </button>
           </form>
 
-          {/* Links alterados */}
           <div className="login-links">
             <p>
               Não é administrador? <Link to="/login">Login de usuário</Link>

@@ -2,13 +2,11 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// --- 1. ADICIONE O IMPORT DO LINK ---
 import { Link } from 'react-router-dom'; 
 
 import '../style/style_pages/TelaCadastro.css';
 
 function TelaCadastro() {
-  // ... (toda a sua lógica 'handleRegisterSubmit', etc. continua igual) ...
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -58,7 +56,6 @@ function TelaCadastro() {
         <div className="cadastro-form-section">
           <h1 className="cadastro-title">Cadastro</h1>
           <form className="cadastro-form" aria-labelledby="cadastro-title" onSubmit={handleRegisterSubmit}>
-            {/* ... (seus inputs de formulário) ... */}
             <div className="form-group">
               <label htmlFor="nome" className="sr-only">Nome</label>
               <input type="text" id="nome" className="form-input" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
@@ -76,12 +73,10 @@ function TelaCadastro() {
             <button type="submit" className="connect-button">Cadastrar</button>
           </form>
 
-          {/* --- 2. CORREÇÃO AQUI --- */}
           <div className="cadastro-links">
             <p>
-              Já tem login? <Link to="/login">Clique aqui</Link> {/* <-- MUDADO DE <a href> PARA <Link to> */}
+              Já tem login? <Link to="/login">Clique aqui</Link>
             </p>
-            {/* Adicionando o link de admin que faltava, para bater com o figma */}
             <p>
               Administrador? <Link to="/login-adm">Clique aqui</Link>
             </p>

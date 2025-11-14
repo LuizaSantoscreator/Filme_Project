@@ -1,28 +1,25 @@
-import React, { useState } from "react"; // Importar useState
+import React, { useState } from "react";
 import "../style/style_pages/TelaAdicionarFilmes.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import imagemDiretor from "../assets/imagem_diretor.png";
 
 export default function TelaAdicionarFilmes() {
-  
-  // --- CONEXÃO COM O BACKEND (INÍCIO) ---
 
-  // 1. Estado para controlar TODOS os campos do formulário
+
   const [formData, setFormData] = useState({
     titulo: "",
-    diretor: "", // Vai para 'diretores_texto' no backend
-    atores: "",  // Vai para 'atores_texto' no backend
+    diretor: "",
+    atores: "",
     ano: "",
-    genero: "",  // Vai para 'generos_texto' no backend
+    genero: "",
     sinopse: "",
-    poster_url: "", // CAMPO ADICIONADO (obrigatório no backend)
+    poster_url: "",
   });
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // 2. Função para atualizar o estado quando o usuário digita
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -31,22 +28,17 @@ export default function TelaAdicionarFilmes() {
     }));
   };
 
-  // 3. Função para ENVIAR o formulário
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Impede o recarregamento da página
+    e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
 
-    // 4. Pegar o token de autenticação do localStorage
-    // Seu backend exige autenticação para esta rota
     const token = localStorage.getItem("authToken");
     if (!token) {
       setErrorMsg("Erro: Você precisa estar logado para enviar um filme.");
       return;
     }
 
-    // 5. Preparar os dados para enviar ao backend
-    // O backend espera 'generos_texto', 'diretores_texto', etc.
     const dadosParaEnviar = {
       titulo: formData.titulo,
       ano: formData.ano,
@@ -58,12 +50,10 @@ export default function TelaAdicionarFilmes() {
     };
 
     try {
-      // 6. Fazer a requisição POST para a rota
       const response = await fetch("http://localhost:8000/filmes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Envia o token no header
           "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(dadosParaEnviar),
@@ -72,13 +62,10 @@ export default function TelaAdicionarFilmes() {
       const data = await response.json();
 
       if (!response.ok) {
-        // Se o backend retornar um erro (ex: 400, 401, 500)
         throw new Error(data.erro || "Falha ao enviar formulário.");
       }
 
-      // Se der certo (ex: 201 Created)
       setSuccessMsg(data.mensagem || "Formulário enviado com sucesso!");
-      // Opcional: limpar o formulário
       setFormData({
         titulo: "", diretor: "", atores: "", ano: "", genero: "", sinopse: "", poster_url: "",
       });
@@ -89,8 +76,6 @@ export default function TelaAdicionarFilmes() {
     }
   };
 
-  // --- CONEXÃO COM O BACKEND (FIM) ---
-
   return (
     <div className="tela-adicionar-filmes">
       <Header />
@@ -99,11 +84,8 @@ export default function TelaAdicionarFilmes() {
         <section className="formulario-conteudo">
           <h2>Formulário</h2>
 
-          {/* O 'onSubmit' agora chama nossa função 'handleSubmit' */}
-          {/* O 'id' foi adicionado para conectar ao botão */}
           <form className="form-filme" id="form-filme-id" onSubmit={handleSubmit}>
-            
-            {/* Campo Título */}
+
             <div className="campo">
               <label htmlFor="titulo">Título do filme</label>
               <input
@@ -112,13 +94,12 @@ export default function TelaAdicionarFilmes() {
                 name="titulo"
                 placeholder="Título do filme..."
                 required
-                value={formData.titulo} // Conecta ao estado
-                onChange={handleChange} // Conecta à função
+                value={formData.titulo}
+                onChange={handleChange}
               />
             </div>
 
-            {/* --- CAMPO NOVO (OBRIGATÓRIO) --- */}
-            {/* O seu backend exige 'poster_url' */}
+
             <div className="campo">
               <label htmlFor="poster_url">URL do Pôster</label>
               <input
@@ -132,7 +113,7 @@ export default function TelaAdicionarFilmes() {
               />
             </div>
 
-            {/* Campo Diretor */}
+
             <div className="campo">
               <label htmlFor="diretor">Nome do diretor</label>
               <input
@@ -146,7 +127,7 @@ export default function TelaAdicionarFilmes() {
               />
             </div>
 
-            {/* Campo Atores */}
+
             <div className="campo">
               <label htmlFor="atores">Atores principais</label>
               <input
@@ -160,11 +141,11 @@ export default function TelaAdicionarFilmes() {
               />
             </div>
 
-            {/* Campo Ano */}
+
             <div className="campo">
               <label htmlFor="ano">Data de lançamento</label>
               <input
-                type="text" // Pode mudar para type="number" se preferir
+                type="text"
                 id="ano"
                 name="ano"
                 placeholder="Data de lançamento..."
@@ -174,7 +155,6 @@ export default function TelaAdicionarFilmes() {
               />
             </div>
 
-            {/* Campo Gênero */}
             <div className="campo">
               <label htmlFor="genero">Gênero</label>
               <input
@@ -188,7 +168,7 @@ export default function TelaAdicionarFilmes() {
               />
             </div>
 
-            {/* Campo Sinopse */}
+
             <div className="campo campo-textarea">
               <label htmlFor="sinopse">Sinopse</label>
               <textarea
@@ -202,7 +182,7 @@ export default function TelaAdicionarFilmes() {
             </div>
           </form>
 
-          {/* Exibição de mensagens de erro ou sucesso */}
+
           {errorMsg && <p className="form-mensagem form-erro">{errorMsg}</p>}
           {successMsg && <p className="form-mensagem form-sucesso">{successMsg}</p>}
 
@@ -210,16 +190,14 @@ export default function TelaAdicionarFilmes() {
 
         <aside className="imagem-diretor-section">
           <img src={imagemDiretor} alt="Ilustração de diretor" />
-          {/* O botão 'type="submit"' agora tem o atributo 'form'
-              para se conectar ao <form> pelo 'id' */}
+
           <button type="submit" className="btn-enviar" form="form-filme-id">
             Enviar Formulário
           </button>
         </aside>
       </main>
 
-      {/* --- CURVA DE TRANSIÇÃO --- */}
-      {/* (Seu código original, mantido) */}
+
       <div className="curva-divisoria">
         <svg
           viewBox="0 0 1440 320"

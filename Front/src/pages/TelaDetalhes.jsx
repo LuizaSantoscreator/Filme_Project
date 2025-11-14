@@ -2,19 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-// O nome do seu CSS provavelmente é 'TelaDetalhes.css' ou similar
 import "../style/style_pages/TelaVisualizacaoFilmes.css"; 
 
-// O nome da função deve ser 'TelaDetalhes' para corresponder ao App.jsx
 export default function TelaDetalhes() {
   const { id } = useParams();
   const [filme, setFilme] = useState(null);
 
-  // Este useEffect está 100% correto.
   useEffect(() => {
     async function fetchFilme() {
       try {
-        // A rota do backend está correta [cite: server.py, filmes_handler.py]
         const response = await fetch(`http://localhost:8000/filmes/${id}`);
         const data = await response.json();
         setFilme(data);
@@ -37,7 +33,6 @@ export default function TelaDetalhes() {
     );
   }
 
-  // O seu JSX de renderização também está 100% correto.
   return (
     <div className="telaEspecificacoes">
       <Header />

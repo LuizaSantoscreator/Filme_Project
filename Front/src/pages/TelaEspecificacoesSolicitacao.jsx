@@ -1,5 +1,3 @@
-// src/pages/TelaEspecificacoesSolicitacao.jsx (CORRIGIDO)
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -14,7 +12,6 @@ export default function TelaEspecificacoesSolicitacao() {
   const [mensagem, setMensagem] = useState("");
   const [error, setError] = useState("");
 
-  // === 1. CORREÇÃO: Carrega a solicitação específica ===
   useEffect(() => {
     const fetchSolicitacao = async () => {
       try {
@@ -24,7 +21,6 @@ export default function TelaEspecificacoesSolicitacao() {
           return;
         }
 
-        // Chama a nova rota GET do backend que criamos
         const response = await fetch(`http://localhost:8000/admin/solicitacoes/${id}`, {
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -48,7 +44,7 @@ export default function TelaEspecificacoesSolicitacao() {
     fetchSolicitacao();
   }, [id]);
 
-  // === 2. CORREÇÃO: Aceita a solicitação ===
+
   const handleAceitar = async () => {
     setError("");
     setMensagem("");
@@ -57,12 +53,11 @@ export default function TelaEspecificacoesSolicitacao() {
       const token = localStorage.getItem("authToken");
       if (!token) throw new Error("Acesso negado. Faça login.");
 
-      // Chama a rota PUT correta para aprovar
       const response = await fetch(`http://localhost:8000/admin/aprovar/${id}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
-          // Não precisa de 'body', o backend só precisa do ID da solicitação
+      
         },
       });
 
@@ -78,7 +73,7 @@ export default function TelaEspecificacoesSolicitacao() {
     }
   };
 
-  // === 3. CORREÇÃO: Rejeita (Deleta) a solicitação ===
+ 
   const handleRejeitar = async () => {
     setError("");
     setMensagem("");
@@ -89,7 +84,7 @@ export default function TelaEspecificacoesSolicitacao() {
       const token = localStorage.getItem("authToken");
       if (!token) throw new Error("Acesso negado. Faça login.");
 
-      // Chama a nova rota PUT que criamos para rejeitar
+      
       const response = await fetch(`http://localhost:8000/admin/rejeitar/${id}`, {
         method: "PUT",
         headers: {
@@ -109,7 +104,7 @@ export default function TelaEspecificacoesSolicitacao() {
     }
   };
 
-  // === Estado de carregamento ===
+
   if (error) {
     return (
       <div className="telaEspecificacoesSolicitacao">
@@ -136,7 +131,7 @@ export default function TelaEspecificacoesSolicitacao() {
     );
   }
 
-  // === RENDERIZAÇÃO CORRIGIDA ===
+
   return (
     <div className="telaEspecificacoesSolicitacao">
       <Header />
@@ -146,7 +141,6 @@ export default function TelaEspecificacoesSolicitacao() {
           className="containerSolicitacao"
           aria-labelledby="titulo-detalhes-solicitacao"
         >
-          {/* 4. CORREÇÃO: Exibe o pôster sugerido, em vez de pedir upload */}
           <aside
             className="uploadContainer"
             aria-label="Pôster sugerido pelo usuário"
@@ -162,7 +156,7 @@ export default function TelaEspecificacoesSolicitacao() {
             )}
           </aside>
 
-          {/* Detalhes do filme */}
+
           <article className="detalhesSolicitacao">
             <h1 id="titulo-detalhes-solicitacao">{solicitacao.titulo}</h1>
             <p>
@@ -189,11 +183,11 @@ export default function TelaEspecificacoesSolicitacao() {
               ))}
             </div>
 
-            {/* Botões de ação */}
+    
             <div className="botoesAcoes">
               <button
                 className="btnDeletar"
-                onClick={handleRejeitar} // <-- Corrigido
+                onClick={handleRejeitar}
                 aria-label="Rejeitar solicitação"
               >
                 Rejeitar
@@ -201,14 +195,14 @@ export default function TelaEspecificacoesSolicitacao() {
 
               <button
                 className="btnAceitar"
-                onClick={handleAceitar} // <-- Corrigido
+                onClick={handleAceitar} 
                 aria-label="Aceitar e adicionar filme"
               >
                 Aceitar Filme
               </button>
             </div>
 
-            {/* Mensagem de status */}
+    
             {mensagem && (
               <p
                 className={`mensagemStatus ${

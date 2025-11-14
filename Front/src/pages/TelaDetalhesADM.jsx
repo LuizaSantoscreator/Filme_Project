@@ -4,10 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
-// 1. Importe o CSS da tela de detalhes do usuário (base)
 import "../style/style_pages/TelaVisualizacaoFilmes.css"; 
-// 2. Importe o NOVO CSS específico para esta tela
 import "../style/style_pages/TelaDetalhesADM.css"; 
 
 export default function TelaDetalhesADM() {
@@ -17,7 +14,6 @@ export default function TelaDetalhesADM() {
   const [filme, setFilme] = useState(null);
   const [error, setError] = useState("");
 
-  // Lógica para buscar o filme (igual à sua TelaDetalhes)
   useEffect(() => {
     async function fetchFilme() {
       try {
@@ -34,8 +30,6 @@ export default function TelaDetalhesADM() {
     }
     fetchFilme();
   }, [id]);
-
-  // Lógica para DELETAR (baseada na sua TelaVisualizacaoFilmesADM)
   const handleDeletar = async () => {
     if (
       !window.confirm(
@@ -70,8 +64,6 @@ export default function TelaDetalhesADM() {
       alert(`Erro: ${err.message}`);
     }
   };
-
-  // --- Renderização ---
 
   if (error) {
     return (
@@ -133,7 +125,6 @@ export default function TelaDetalhesADM() {
               ))}
             </div>
 
-            {/* --- BOTÕES DE ADMIN ADICIONADOS (com classes) --- */}
             <div className="admin-actions">
               <button
                 onClick={handleDeletar}

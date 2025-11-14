@@ -1,5 +1,3 @@
-// src/pages/TelaInicial.jsx (CORRIGIDO)
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/style_pages/TelaInicial.css";
@@ -7,14 +5,12 @@ import imagemInicial from "../assets/mulher_pagina_inicial.png";
 import imagemForm from "../assets/Imagem_tela _inicial_forms.png";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
-// --- 1. IMPORTE O COMPONENTE DO CARD ---
 import CardFilme from "../components/CardFilme.jsx";
 
 export default function TelaInicial() {
   const [filmes, setFilmes] = useState([]);
   const [error, setError] = useState(null);
 
-  // ... (seu useEffect continua igual) ...
   useEffect(() => {
     const fetchFilmes = async () => {
       try {
@@ -35,8 +31,6 @@ export default function TelaInicial() {
   return (
     <div className="tela-inicial">
       <Header />
-
-      {/* ... (Seção 1 - Hero - continua igual) ... */}
       <section className="hero-section">
         <div className="texto-hero">
           <h2>ACESSE NOSSA LISTA COMPLETA DE FILMES</h2>
@@ -49,7 +43,6 @@ export default function TelaInicial() {
         </div>
       </section>
 
-      {/* SEÇÃO 2 - Filmes populares (AGORA DINÂMICO) */}
       <section className="populares-section">
         <h3>FILMES MAIS POPULARES</h3>
         <div className="lista-filmes">
@@ -66,7 +59,7 @@ export default function TelaInicial() {
         </div>
       </section>
 
-      {/* ... (Seção 3 - Sugestões - continua igual) ... */}
+
       <section className="sugestoes-section">
         <div className="texto-sugestoes">
           <h3>AGORA VOCÊ PODE ENVIAR SUGESTÕES DE FILMES!!!</h3>

@@ -14,7 +14,6 @@ export default function TelaAdm() {
     <div className="tela-adm">
       <Header />
 
-      {/* SEÇÃO PRINCIPAL */}
       <main className="adm-main">
         <section className="adm-hero">
           <div className="adm-texto">
@@ -29,13 +28,11 @@ export default function TelaAdm() {
           </div>
         </section>
 
-        {/* SEÇÃO DE BOTÕES */}
         <section className="adm-botoes" aria-label="Ações do administrador">
-          
-          {/* --- CORREÇÃO: O link agora bate com a Rota do App.jsx --- */}
+        
           <button
             className="adm-btn"
-            onClick={() => navigate("/admin/adicionar-filme")} // <-- CORRIGIDO
+            onClick={() => navigate("/admin/adicionar-filme")} 
           >
             Adicionar Filmes
           </button>
@@ -47,7 +44,6 @@ export default function TelaAdm() {
             Solicitações de Filmes
           </button>
 
-          {/* Este link agora funciona, pois o App.jsx está correto */}
           <button
             className="adm-btn"
             onClick={() => navigate("/admin/visualizar-filmes")}

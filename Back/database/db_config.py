@@ -1,6 +1,7 @@
+# Configurações de acesso ao MySQL
 DB_CONFIG = {
-    'user': 'root',
-    'password': 'senai',
-    'host': '127.0.0.1',
-    'database': 'filminis_db'
+    'user': 'root',       # Usuário do banco
+    'password': 'senai',  # Senha do banco
+    'host': '127.0.0.1',  # Endereço (localhost)
+    'database': 'filminis_db' # Nome do banco
 }

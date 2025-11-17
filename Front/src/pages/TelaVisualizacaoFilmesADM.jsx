@@ -6,10 +6,12 @@ import "../style/style_pages/TelaVisualizacaoFilmesADM.css";
 
 export default function TelaVisualizacaoFilmes() {
 
+    // Estados para a lista de filmes e feedback
     const [filmes, setFilmes] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Busco todos os filmes aprovados para exibir na tabela
     useEffect(() => {
         const fetchFilmes = async () => {
             try {
@@ -29,6 +31,7 @@ export default function TelaVisualizacaoFilmes() {
         fetchFilmes();
     }, []);
 
+    // Função para o admin excluir um filme permanentemente
     const handleExcluirFilme = async (filmeId) => {
     
         if (!window.confirm("Tem certeza que deseja excluir este filme? Esta ação não pode ser desfeita.")) {
@@ -56,6 +59,7 @@ export default function TelaVisualizacaoFilmes() {
                 throw new Error(data.erro || "Falha ao excluir o filme.");
             }
 
+            // Removo o filme da tabela visualmente
             setFilmes(filmes.filter((filme) => filme.id !== filmeId));
             alert(data.mensagem);
 
@@ -65,6 +69,7 @@ export default function TelaVisualizacaoFilmes() {
         }
     };
 
+    // Função auxiliar para renderizar a tabela ou mensagens de erro
     const renderConteudo = () => {
         if (loading) {
             return <p className="mensagem-feedback">Carregando filmes...</p>;
@@ -87,6 +92,7 @@ export default function TelaVisualizacaoFilmes() {
                     </tr>
                 </thead>
                 <tbody>
+                    {/* Crio uma linha na tabela para cada filme */}
                     {filmes.map((filme) => (
                         <tr key={filme.id}>
                             <td>
@@ -100,7 +106,7 @@ export default function TelaVisualizacaoFilmes() {
                             <td data-label="Ano">{filme.ano}</td>
                             <td data-label="Ações">
                                 <div className="tabela-acoes">
-                                  
+                                    {/* Botão de Editar (Link) */}
                                     <Link
                                         to={`/admin/editar-filme/${filme.id}`}
                                         className="btn-tabela btn-editar"
@@ -108,6 +114,7 @@ export default function TelaVisualizacaoFilmes() {
                                         Editar
                                     </Link>
                                
+                                    {/* Botão de Excluir */}
                                     <button
                                         onClick={() => handleExcluirFilme(filme.id)}
                                         className="btn-tabela btn-excluir"

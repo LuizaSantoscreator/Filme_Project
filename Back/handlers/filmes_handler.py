@@ -4,15 +4,17 @@ from database.db_utils import get_db_connection
 from utils.response_utils import parse_json_body, send_json_response, send_error_response 
 import mysql.connector
 
+# Pega todos os filmes para mostrar na tela principal
 def handle_get_all_filmes(handler_instance):
 
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dados).")
+        send_error_response(handler_instance, 500, "Erro interno do servidor.")
         return
 
     cursor = conn.cursor(dictionary=True)
     
+    # Busco os filmes e junto os gêneros numa string só, separada por vírgula
     query = """
         SELECT 
             f.id, f.titulo, f.ano, f.sinopse, f.poster_url,
@@ -27,6 +29,7 @@ def handle_get_all_filmes(handler_instance):
         cursor.execute(query)
         filmes = cursor.fetchall()
         
+        # Transformo a string de gêneros em uma lista de verdade pro Python
         for filme in filmes:
             if filme['generos']:
                 filme['generos'] = filme['generos'].split(', ')
@@ -36,7 +39,7 @@ def handle_get_all_filmes(handler_instance):
         send_json_response(handler_instance, 200, filmes)
         
     except mysql.connector.Error as err:
-        send_error_response(handler_instance, 500, f"Erro no banco de dados: {err.errno} ({err.sqlstate}): {err.msg}")
+        send_error_response(handler_instance, 500, f"Erro no banco de dados: {err}")
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
@@ -44,12 +47,12 @@ def handle_get_all_filmes(handler_instance):
             conn.close()
 
 
+# Busca um filme específico pelo ID (para a tela de detalhes)
 def handle_get_filme_by_id(handler_instance, filme_id):
 
-    
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dados).")
+        send_error_response(handler_instance, 500, "Erro interno do servidor.")
         return
 
     cursor = conn.cursor(dictionary=True)
@@ -91,7 +94,7 @@ def handle_get_filme_by_id(handler_instance, filme_id):
         send_json_response(handler_instance, 200, filme)
         
     except mysql.connector.Error as err:
-        send_error_response(handler_instance, 500, f"Erro no banco de dados: {err.errno} ({err.sqlstate}): {err.msg}")
+        send_error_response(handler_instance, 500, f"Erro no banco: {err}")
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
@@ -99,30 +102,31 @@ def handle_get_filme_by_id(handler_instance, filme_id):
             conn.close()
 
 
+# Cria uma solicitação de filme (para usuários comuns)
 def handle_create_filme(handler_instance, user_data):
-
     
     body = parse_json_body(handler_instance)
     if not body:
-        send_error_response(handler_instance, 400, "Corpo da requisição inválido ou vazio.")
+        send_error_response(handler_instance, 400, "Requisição inválida.")
         return
 
     titulo = body.get('titulo')
     sinopse = body.get('sinopse')
     poster_url = body.get('poster_url')
     if not titulo or not sinopse or not poster_url:
-        send_error_response(handler_instance, 400, "Campos 'titulo', 'sinopse' e 'poster_url' são obrigatórios.")
+        send_error_response(handler_instance, 400, "Campos obrigatórios faltando.")
         return
 
     solicitado_por_id = user_data['user_id']
     
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (BAmco de dados).")
+        send_error_response(handler_instance, 500, "Erro no DB.")
         return
 
     cursor = conn.cursor()
     
+    # Insiro na tabela de SOLICITAÇÕES, não na de filmes
     query = """
         INSERT INTO solicitacoes_adicao 
         (titulo, ano, sinopse, poster_url, generos_texto, diretores_texto, atores_texto, 
@@ -145,7 +149,7 @@ def handle_create_filme(handler_instance, user_data):
         })
         
     except mysql.connector.Error as err:
-        send_error_response(handler_instance, 500, f"Erro no banco de dados: {err.errno} ({err.sqlstate}): {err.msg}")
+        send_error_response(handler_instance, 500, f"Erro no banco: {err}")
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
@@ -153,15 +157,16 @@ def handle_create_filme(handler_instance, user_data):
             conn.close()
 
 
+# Função de busca avançada com filtros
 def handle_search_filmes(handler_instance):
-
     
+    # Pego os parâmetros da URL (ex: ?titulo=Batman&ano=2008)
     parsed_path = urlparse(handler_instance.path)
     query_params = parse_qs(parsed_path.query)
 
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dados)).")
+        send_error_response(handler_instance, 500, "Erro no DB.")
         return
 
     cursor = conn.cursor(dictionary=True)
@@ -184,6 +189,7 @@ def handle_search_filmes(handler_instance):
     where_clauses = [] 
     params = []        
 
+    # Vou montando a query dinamicamente com base no que o usuário preencheu
     if 'titulo' in query_params:
         titulo = query_params['titulo'][0]
         where_clauses.append("f.titulo LIKE %s")
@@ -232,26 +238,26 @@ def handle_search_filmes(handler_instance):
         send_json_response(handler_instance, 200, filmes)
         
     except mysql.connector.Error as err:
-        send_error_response(handler_instance, 500, f"Erro no banco de dados: {err.errno} ({err.sqlstate}): {err.msg}")
+        send_error_response(handler_instance, 500, f"Erro no banco: {err}")
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
+# Cria uma solicitação de edição
 def handle_edit_filme(handler_instance, filme_id, user_data):
-
     
     body = parse_json_body(handler_instance)
     if not body:
-        send_error_response(handler_instance, 400, "Corpo da requisição inválido (JSON).")
+        send_error_response(handler_instance, 400, "Requisição inválida.")
         return
 
     solicitado_por_id = user_data['user_id']
 
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dados).")
+        send_error_response(handler_instance, 500, "Erro no DB.")
         return
 
     conn.autocommit = False 
@@ -274,13 +280,14 @@ def handle_edit_filme(handler_instance, filme_id, user_data):
         
         alteracoes_enviadas = 0
         
-
+        # Verifico cada campo para ver se mudou
         for campo, valor_novo in body.items():
 
             if campo in filme_original and campo != 'id':
                 valor_antigo = str(filme_original[campo])
                 valor_novo_str = str(valor_novo)
 
+                # Só crio a solicitação se o valor for diferente do atual
                 if valor_novo_str != valor_antigo:
                     cursor.execute(query_insert, (
                         filme_id,
@@ -303,10 +310,10 @@ def handle_edit_filme(handler_instance, filme_id, user_data):
 
     except mysql.connector.Error as err:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro no banco de dados: {err}")
+        send_error_response(handler_instance, 500, f"Erro no banco: {err}")
     except Exception as e:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro inesperado: {e}")
+        send_error_response(handler_instance, 500, f"Erro: {e}")
     finally:
         conn.autocommit = True
         if 'cursor' in locals() and cursor:

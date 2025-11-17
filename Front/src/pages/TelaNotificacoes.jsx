@@ -5,21 +5,25 @@ import "../style/style_pages/TelaNotificacao.css";
 import { useNavigate } from "react-router-dom";
 
 export default function TelaNotificacao() {
+  // Lista de notificações que vem do backend
   const [notificacoes, setNotificacoes] = useState([]);
   const [error, setError] = useState("");
   const [mensagem, setMensagem] = useState("");
   const navigate = useNavigate();
 
+  // Busco as notificações assim que a tela carrega
   useEffect(() => {
     const fetchNotificacoes = async () => {
       const token = localStorage.getItem("authToken");
 
+      // Verifico se é admin
       if (!token) {
         setError("Acesso negado. Faça login como administrador.");
         return;
       }
 
       try {
+        // Busco as solicitações pendentes
         const response = await fetch(
           "http://localhost:8000/admin/solicitacoes",
           {
@@ -47,6 +51,7 @@ export default function TelaNotificacao() {
     fetchNotificacoes();
   }, []); 
 
+  // Função para rejeitar (excluir) uma solicitação direto da lista
   const handleExcluir = async (id) => {
     setError("");
     setMensagem("");
@@ -62,6 +67,7 @@ export default function TelaNotificacao() {
     }
 
     try {
+      // Chamo a rota de rejeição
       const response = await fetch(`http://localhost:8000/admin/rejeitar/${id}`, {
         method: "PUT",
         headers: {
@@ -75,6 +81,7 @@ export default function TelaNotificacao() {
       }
 
       setMensagem(data.mensagem);
+      // Removo a notificação da lista visualmente para não precisar recarregar a página
       setNotificacoes(notificacoes.filter((n) => n.id !== id));
 
     } catch (err) {
@@ -83,6 +90,7 @@ export default function TelaNotificacao() {
     }
   };
 
+  // Vai para a tela de detalhes para ver mais sobre o pedido
   const handleVerEspecificacoes = (id) => {
     console.log("Ver detalhes da solicitação", id);
     navigate(`/admin/solicitacao/${id}`);
@@ -99,9 +107,11 @@ export default function TelaNotificacao() {
         {mensagem && <p className="semNotificacoes sucesso-msg">{mensagem}</p>}
 
         <div className="listaNotificacoes">
+          {/* Se não tiver erro nem notificações, mostro mensagem vazia */}
           {!error && notificacoes.length === 0 && !mensagem ? (
             <p className="semNotificacoes">Nenhuma notificação no momento.</p>
           ) : (
+            // Mapeio cada notificação para um card na tela
             notificacoes.map((notificacao) => (
               <div key={notificacao.id} className="cardNotificacao">
                 <p>

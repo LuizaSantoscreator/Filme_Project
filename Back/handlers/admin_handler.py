@@ -3,18 +3,20 @@ from database.db_utils import get_db_connection
 from utils.response_utils import parse_json_body, send_json_response, send_error_response 
 import mysql.connector
 
-# Lista de colunas que permitimos que sejam editadas.
+# Defino o que pode ser editado para evitar problemas de segurança
 EDIT_COLUMNS_WHITELIST = ['titulo', 'ano', 'sinopse', 'poster_url']
 
+# Essa função busca todas as solicitações que estão esperando aprovação
 def handle_get_pending_filmes(handler_instance):
     
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dadso).")
+        send_error_response(handler_instance, 500, "Erro interno do servidor (Banco de dados).")
         return
 
     cursor = conn.cursor(dictionary=True)
     
+    # Busco na tabela de solicitações, trazendo também o nome de quem pediu
     query = """
         SELECT s.*, u.nome AS solicitado_por_nome
         FROM solicitacoes_adicao s
@@ -26,7 +28,7 @@ def handle_get_pending_filmes(handler_instance):
     try:
         cursor.execute(query)
         solicitacoes = cursor.fetchall()
-        
+        # Envio a lista de solicitações pro frontend
         send_json_response(handler_instance, 200, solicitacoes)
         
     except mysql.connector.Error as err:
@@ -37,42 +39,45 @@ def handle_get_pending_filmes(handler_instance):
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
-
+# Função auxiliar para processar listas (tipo atores ou gêneros) e salvar no banco
 def _processar_e_linkar_dados(cursor, filme_id, tabela_catalogo, tabela_link, coluna_link, texto_csv):
-    """
-    Função helper interna para processar texto (ex: "Ator1, Ator2")
-    """
     if not texto_csv: 
         return
         
+    # Separo os nomes por vírgula (ex: "Ação, Aventura")
     nomes = [nome.strip() for nome in texto_csv.split(',')]
     for nome in nomes:
         if not nome: continue 
 
+        # Vejo se o gênero/ator já existe no banco
         cursor.execute(f"SELECT id FROM {tabela_catalogo} WHERE nome = %s", (nome,))
         resultado = cursor.fetchone()
         
         if resultado:
             item_id = resultado['id']
         else:
+            # Se não existir, crio um novo
             cursor.execute(f"INSERT INTO {tabela_catalogo} (nome) VALUES (%s)", (nome,))
             item_id = cursor.lastrowid 
-            
+        
+        # Linko esse gênero/ator ao filme
         cursor.execute(f"INSERT IGNORE INTO {tabela_link} (filme_id, {coluna_link}) VALUES (%s, %s)", (filme_id, item_id))
 
 
+# Aprova uma solicitação de adição e cria o filme de verdade
 def handle_approve_filme(handler_instance, solicitacao_id):
-
     
     conn = get_db_connection()
     if not conn:
         send_error_response(handler_instance, 500, "Erro interno do servidor (DB).")
         return
 
+    # Começo uma transação para garantir que ou salva tudo, ou nada
     conn.autocommit = False 
     cursor = conn.cursor(dictionary=True)
     
     try:
+        # Busco a solicitação pendente
         cursor.execute("SELECT * FROM solicitacoes_adicao WHERE id = %s AND status = 'pendente'", (solicitacao_id,))
         solicitacao = cursor.fetchone()
         
@@ -80,6 +85,7 @@ def handle_approve_filme(handler_instance, solicitacao_id):
             send_error_response(handler_instance, 404, "Solicitação não encontrada ou já processada.")
             return
 
+        # Insiro o filme na tabela oficial
         query_filme = """
             INSERT INTO filmes (titulo, ano, sinopse, poster_url)
             VALUES (%s, %s, %s, %s)
@@ -91,21 +97,22 @@ def handle_approve_filme(handler_instance, solicitacao_id):
         
         filme_id = cursor.lastrowid 
 
+        # Processo os gêneros, diretores e atores usando a função auxiliar
         _processar_e_linkar_dados(cursor, filme_id, 'generos', 'filmes_generos', 'genero_id', solicitacao['generos_texto'])
         _processar_e_linkar_dados(cursor, filme_id, 'diretores', 'filmes_diretores', 'diretor_id', solicitacao['diretores_texto'])
         _processar_e_linkar_dados(cursor, filme_id, 'atores', 'filmes_atores', 'ator_id', solicitacao['atores_texto'])
 
+        # Marco a solicitação como 'aprovado'
         cursor.execute("UPDATE solicitacoes_adicao SET status = 'aprovado' WHERE id = %s", (solicitacao_id,))
         
         conn.commit()
-        
         send_json_response(handler_instance, 200, {
             "mensagem": "Filme aprovado e publicado com sucesso.",
             "filme_id_criado": filme_id
         })
 
     except mysql.connector.Error as err:
-        conn.rollback()
+        conn.rollback() # Se der erro, desfaço tudo
         send_error_response(handler_instance, 500, f"Erro no banco de dados durante a transação: {err}")
     except Exception as e:
         conn.rollback()
@@ -117,9 +124,8 @@ def handle_approve_filme(handler_instance, solicitacao_id):
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
-
+# Deleta um filme do banco
 def handle_delete_filme(handler_instance, filme_id):
-
     
     conn = get_db_connection()
     if not conn:
@@ -149,6 +155,7 @@ def handle_delete_filme(handler_instance, filme_id):
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
+# Aprova uma edição sugerida por um usuário
 def handle_approve_edit(handler_instance, solicitacao_id):
 
     conn = get_db_connection()
@@ -164,23 +171,25 @@ def handle_approve_edit(handler_instance, solicitacao_id):
         solicitacao = cursor.fetchone()
         
         if not solicitacao:
-            send_error_response(handler_instance, 404, "Solicitação de edição não encontrada ou já processada.")
+            send_error_response(handler_instance, 404, "Solicitação de edição não encontrada.")
             return
 
         filme_id = solicitacao['filme_id']
         campo = solicitacao['campo_alterado']
         valor_novo = solicitacao['valor_novo']
         
+        # Confiro se o campo pode ser editado (segurança)
         if campo not in EDIT_COLUMNS_WHITELIST:
-            raise ValueError(f"A edição do campo '{campo}' não é permitida por razões de segurança.")
+            raise ValueError(f"A edição do campo '{campo}' não é permitida.")
         
+        # Atualizo o filme no banco
         query_update = f"UPDATE filmes SET {campo} = %s WHERE id = %s"
         cursor.execute(query_update, (valor_novo, filme_id))
 
         cursor.execute("UPDATE solicitacoes_edicao SET status = 'aprovado' WHERE id = %s", (solicitacao_id,))
         
         conn.commit()
-        send_json_response(handler_instance, 200, {"mensagem": f"Alteração do campo '{campo}' aprovada com sucesso."})
+        send_json_response(handler_instance, 200, {"mensagem": f"Alteração aprovada com sucesso."})
 
     except (mysql.connector.Error, ValueError) as err:
         conn.rollback() 
@@ -192,7 +201,7 @@ def handle_approve_edit(handler_instance, solicitacao_id):
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
-
+# Rejeita uma edição sugerida
 def handle_reject_edit(handler_instance, solicitacao_id):
     
     conn = get_db_connection()
@@ -203,24 +212,26 @@ def handle_reject_edit(handler_instance, solicitacao_id):
     cursor = conn.cursor()
     
     try:
+        # Apenas mudo o status para 'rejeitado'
         query = "UPDATE solicitacoes_edicao SET status = 'rejeitado' WHERE id = %s AND status = 'pendente'"
         cursor.execute(query, (solicitacao_id,))
         
         if cursor.rowcount == 0:
-            send_error_response(handler_instance, 404, "Solicitação de edição não encontrada ou já processada.")
+            send_error_response(handler_instance, 404, "Solicitação não encontrada.")
         else:
             conn.commit()
-            send_json_response(handler_instance, 200, {"mensagem": "Solicitação de edição rejeitada com sucesso."})
+            send_json_response(handler_instance, 200, {"mensagem": "Solicitação rejeitada com sucesso."})
             
     except mysql.connector.Error as err:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro ao rejeitar edição: {err}")
+        send_error_response(handler_instance, 500, f"Erro ao rejeitar: {err}")
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
+# Busca uma solicitação específica pelo ID para exibir na tela de aprovação
 def handle_get_solicitacao_by_id(handler_instance, solicitacao_id):
 
     conn = get_db_connection()
@@ -255,7 +266,7 @@ def handle_get_solicitacao_by_id(handler_instance, solicitacao_id):
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
-
+# Rejeita uma solicitação de ADIÇÃO de filme
 def handle_reject_filme(handler_instance, solicitacao_id):
     
     conn = get_db_connection()
@@ -270,27 +281,26 @@ def handle_reject_filme(handler_instance, solicitacao_id):
         cursor.execute(query, (solicitacao_id,))
         
         if cursor.rowcount == 0:
-            send_error_response(handler_instance, 404, "Solicitação de adição não encontrada ou já processada.")
+            send_error_response(handler_instance, 404, "Solicitação não encontrada.")
         else:
             conn.commit()
-            send_json_response(handler_instance, 200, {"mensagem": "Solicitação de adição rejeitada com sucesso."})
+            send_json_response(handler_instance, 200, {"mensagem": "Solicitação rejeitada."})
             
     except mysql.connector.Error as err:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro ao rejeitar adição: {err}")
+        send_error_response(handler_instance, 500, f"Erro ao rejeitar: {err}")
     finally:
         if 'cursor' in locals() and cursor:
             cursor.close()
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
-
+# Permite que o ADMIN adicione um filme direto, sem passar por aprovação
 def handle_direct_create_filme(handler_instance, user_data):
-
     
     body = parse_json_body(handler_instance)
     if not body:
-        send_error_response(handler_instance, 400, "Corpo da requisição inválido ou vazio.")
+        send_error_response(handler_instance, 400, "Corpo da requisição inválido.")
         return
 
     titulo = body.get('titulo')
@@ -298,18 +308,19 @@ def handle_direct_create_filme(handler_instance, user_data):
     poster_url = body.get('poster_url')
     
     if not titulo or not sinopse or not poster_url:
-        send_error_response(handler_instance, 400, "Campos 'titulo', 'sinopse' e 'poster_url' são obrigatórios.")
+        send_error_response(handler_instance, 400, "Campos obrigatórios faltando.")
         return
 
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (DB).")
+        send_error_response(handler_instance, 500, "Erro no DB.")
         return
 
     conn.autocommit = False 
     cursor = conn.cursor(dictionary=True)
     
     try:
+        # Insiro direto na tabela de filmes
         query_filme = """
             INSERT INTO filmes (titulo, ano, sinopse, poster_url)
             VALUES (%s, %s, %s, %s)
@@ -321,23 +332,23 @@ def handle_direct_create_filme(handler_instance, user_data):
         
         filme_id = cursor.lastrowid 
 
+        # Vinculo os gêneros e atores
         _processar_e_linkar_dados(cursor, filme_id, 'generos', 'filmes_generos', 'genero_id', body.get('generos_texto'))
         _processar_e_linkar_dados(cursor, filme_id, 'diretores', 'filmes_diretores', 'diretor_id', body.get('diretores_texto'))
         _processar_e_linkar_dados(cursor, filme_id, 'atores', 'filmes_atores', 'ator_id', body.get('atores_texto'))
 
         conn.commit()
-        
         send_json_response(handler_instance, 201, {
-            "mensagem": "Filme criado e publicado com sucesso (Adição Direta).",
+            "mensagem": "Filme criado com sucesso (Admin).",
             "filme_id_criado": filme_id
         })
 
     except mysql.connector.Error as err:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro no banco de dados durante a transação: {err}")
+        send_error_response(handler_instance, 500, f"Erro no banco: {err}")
     except Exception as e:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro inesperado: {e}")
+        send_error_response(handler_instance, 500, f"Erro: {e}")
     finally:
         conn.autocommit = True
         if 'cursor' in locals() and cursor:
@@ -345,18 +356,17 @@ def handle_direct_create_filme(handler_instance, user_data):
         if 'conn' in locals() and conn and conn.is_connected():
             conn.close()
 
-
+# Permite que o ADMIN edite um filme direto
 def handle_direct_edit_filme(handler_instance, filme_id, user_data):
-
     
     body = parse_json_body(handler_instance)
     if not body:
-        send_error_response(handler_instance, 400, "Corpo da requisição inválido ou vazio.")
+        send_error_response(handler_instance, 400, "Requisição inválida.")
         return
 
     conn = get_db_connection()
     if not conn:
-        send_error_response(handler_instance, 500, "Erro interno do servidor (DB).")
+        send_error_response(handler_instance, 500, "Erro no DB.")
         return
 
     conn.autocommit = False 
@@ -365,9 +375,10 @@ def handle_direct_edit_filme(handler_instance, filme_id, user_data):
     try:
         cursor.execute("SELECT id FROM filmes WHERE id = %s", (filme_id,))
         if not cursor.fetchone():
-            send_error_response(handler_instance, 404, "Filme não encontrado para editar.")
+            send_error_response(handler_instance, 404, "Filme não encontrado.")
             return
 
+        # Atualizo os dados
         query_update_filme = """
             UPDATE filmes 
             SET 
@@ -383,6 +394,7 @@ def handle_direct_edit_filme(handler_instance, filme_id, user_data):
             filme_id
         ))
  
+        # Se mandaram novos gêneros, apago os antigos e crio os novos
         if 'generos_texto' in body:
             cursor.execute("DELETE FROM filmes_generos WHERE filme_id = %s", (filme_id,))
             _processar_e_linkar_dados(cursor, filme_id, 'generos', 'filmes_generos', 'genero_id', body.get('generos_texto'))
@@ -396,17 +408,16 @@ def handle_direct_edit_filme(handler_instance, filme_id, user_data):
             _processar_e_linkar_dados(cursor, filme_id, 'atores', 'filmes_atores', 'ator_id', body.get('atores_texto'))
 
         conn.commit()
-        
         send_json_response(handler_instance, 200, {
-            "mensagem": "Filme atualizado com sucesso (Edição Direta)."
+            "mensagem": "Filme atualizado com sucesso (Admin)."
         })
 
     except mysql.connector.Error as err:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro no banco de dados durante a transação: {err}")
+        send_error_response(handler_instance, 500, f"Erro no banco: {err}")
     except Exception as e:
         conn.rollback()
-        send_error_response(handler_instance, 500, f"Erro inesperado: {e}")
+        send_error_response(handler_instance, 500, f"Erro: {e}")
     finally:
         conn.autocommit = True
         if 'cursor' in locals() and cursor:

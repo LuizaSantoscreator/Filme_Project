@@ -14,22 +14,23 @@ from handlers.admin_handler import (
     handle_direct_edit_filme
 )
 
+# Classe principal que recebe todas as chamadas do site
 class SimpleAPIHandler(BaseHTTPRequestHandler):
 
-
+    # Configura o CORS para permitir que o Frontend (React) fale com o Backend (Python)
     def _send_cors_headers(self):
-
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization') 
 
+    # Responde a requisições OPTIONS (verificação do navegador)
     def do_OPTIONS(self):
         self.send_response(204) 
         self._send_cors_headers()
         self.end_headers()
 
+    # Função helper para ler o token e descobrir quem está logado
     def _get_user_data_from_token(self):
-
         auth_header = self.headers.get('Authorization')
         if not auth_header:
             return None
@@ -44,6 +45,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             return None
 
 
+    # Roteador para requisições GET (buscar dados)
     def do_GET(self):
         
         if self.path.startswith('/filmes/buscar'):
@@ -60,26 +62,28 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             filmes_handler.handle_get_all_filmes(self) 
             
         elif self.path == '/admin/solicitacoes':
+            # Proteção: Só admin pode ver
             user_data = self._get_user_data_from_token()
             if user_data and user_data['role'] == 'adm':
                 admin_handler.handle_get_pending_filmes(self)
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
         
         elif re.match(r'/admin/solicitacoes/(\d+)', self.path):
             user_data = self._get_user_data_from_token()
             if user_data and user_data['role'] == 'adm':
                 try:
                     solicitacao_id = int(re.match(r'/admin/solicitacoes/(\d+)', self.path).group(1))
-                    handle_get_solicitacao_by_id(self, solicitacao_id) # <-- ATIVADO
+                    handle_get_solicitacao_by_id(self, solicitacao_id)
                 except ValueError:
-                    send_error_response(self, 400, "ID da solicitação inválido.")
+                    send_error_response(self, 400, "ID inválido.")
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
         
         else:
             send_error_response(self, 404, "Rota não encontrada.")
 
+    # Roteador para requisições POST (criar coisas)
     def do_POST(self):
         
         if self.path == '/login':
@@ -92,22 +96,25 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             user_data = self._get_user_data_from_token()
             if user_data: 
                 filmes_handler.handle_create_filme(self, user_data) 
-                send_error_response(self, 401, "Não autorizado. Token inválido ou ausente.")
+            else:
+                send_error_response(self, 401, "Não autorizado.")
         
         elif self.path == '/admin/filmes':
             user_data = self._get_user_data_from_token()
             if user_data and user_data['role'] == 'adm':
                 handle_direct_create_filme(self, user_data)
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
 
 
         else:
             send_error_response(self, 404, "Rota não encontrada.")
             
             
+    # Roteador para requisições PUT (atualizar coisas)
     def do_PUT(self):
 
+        # Uso regex para identificar qual rota está sendo chamada
         match_approve_add = re.match(r'/admin/aprovar/(\d+)', self.path)
         match_approve_edit = re.match(r'/admin/aprovar-edicao/(\d+)', self.path) 
         match_reject_edit = re.match(r'/admin/rejeitar-edicao/(\d+)', self.path) 
@@ -122,7 +129,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             if user_data and user_data['role'] == 'adm':
                 admin_handler.handle_approve_filme(self, solicitacao_id) 
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
             return
 
         elif match_approve_edit:
@@ -130,7 +137,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             if user_data and user_data['role'] == 'adm':
                 admin_handler.handle_approve_edit(self, solicitacao_id) 
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
             return
 
         elif match_reject_edit:
@@ -138,7 +145,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             if user_data and user_data['role'] == 'adm':
                 admin_handler.handle_reject_edit(self, solicitacao_id)
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
             return
 
         elif match_reject_add:
@@ -146,7 +153,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             if user_data and user_data['role'] == 'adm':
                 handle_reject_filme(self, solicitacao_id)
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
             return
 
         elif match_admin_edit:
@@ -154,7 +161,7 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             if user_data and user_data['role'] == 'adm':
                 handle_direct_edit_filme(self, filme_id, user_data) 
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
             return
 
         elif match_edit_filme:
@@ -162,12 +169,13 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
             if user_data: 
                 filmes_handler.handle_edit_filme(self, filme_id, user_data)
             else:
-                send_error_response(self, 401, "Não autorizado. Token inválido ou ausente.")
+                send_error_response(self, 401, "Não autorizado.")
             return
             
         else:
             send_error_response(self, 404, "Rota não encontrada.")
             
+    # Roteador para requisições DELETE (excluir coisas)
     def do_DELETE(self):
         match = re.match(r'/filmes/(\d+)', self.path)
         if match:
@@ -179,12 +187,13 @@ class SimpleAPIHandler(BaseHTTPRequestHandler):
                 except ValueError:
                     send_error_response(self, 400, "ID do filme inválido.")
             else:
-                send_error_response(self, 403, "Acesso negado. Rota exclusiva para administradores.")
+                send_error_response(self, 403, "Acesso negado.")
             return
 
         else:
             send_error_response(self, 404, "Rota não encontrada.")
-
+            
+# Inicia o servidor na porta 8000
 def run(server_class=HTTPServer, handler_class=SimpleAPIHandler, port=8000):
     server_address = ('', port) 
     httpd = server_class(server_address, handler_class)

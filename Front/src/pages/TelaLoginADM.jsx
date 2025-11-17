@@ -3,20 +3,27 @@ import { useNavigate, Link } from 'react-router-dom';
 import '../style/style_pages/TelaLogin.css'; 
 
 function TelaLoginADM() {
+  // Estados para guardar o email e a senha que o admin digita
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  
+  // Uso o navigate para mudar de página depois do login
   const navigate = useNavigate();
+
+  // Função que roda quando clico no botão "Conectar"
   const handleLoginSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Evito que a página recarregue
     setErrorMsg('');
 
+    // Verifico se os campos estão preenchidos
     if (!email || !senha) {
       setErrorMsg('Por favor, preencha o email e a senha.');
       return;
     }
 
     try {
+      // Envio os dados para o backend verificar
       const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
         headers: {
@@ -30,14 +37,18 @@ function TelaLoginADM() {
 
       const data = await response.json();
 
+      // Se o login falhar, mostro o erro
       if (!response.ok) {
         throw new Error(data.erro || 'Falha ao tentar fazer login.');
       }
 
+      // Se der certo, verifico se o usuário é REALMENTE um admin
       if (data.usuario.role === 'adm') {
+        // Salvo o token e os dados para usar depois
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('userData', JSON.stringify(data.usuario));
         console.log('Login de ADM bem-sucedido!', data);
+        // Mando ele para o painel de admin
         navigate('/admin'); 
       } else {
         setErrorMsg('Acesso negado. Esta página é apenas para administradores.');
@@ -97,6 +108,7 @@ function TelaLoginADM() {
               </div>
             </div>
 
+            {/* Se tiver erro, mostro a mensagem aqui */}
             {errorMsg && (
               <div className="login-error-message" role="alert">
                 {errorMsg}

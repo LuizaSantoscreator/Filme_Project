@@ -6,71 +6,64 @@ import SecaoFilmes from "../components/SecaoFilmes";
 import FiltroModal from "../components/FiltroModal";
 import "../style/style_pages/TelaFilmes.css";
 import imagemTitanic from "../assets/imagem_titanic.png";
-import imagemLobo from "../assets/imagem_lobo_wall_streats.png";
 
 function TelaFilmes() {
+  // Aqui eu guardo a lista de filmes, erros e se o modal de filtro está aberto
   const [filmes, setFilmes] = useState([]);
   const [erro, setErro] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
+  
+  // Aqui guardo os filtros e a busca que o usuário digitou
   const [filtros, setFiltros] = useState(null);
   const [busca, setBusca] = useState("");
   const [triggerFetch, setTriggerFetch] = useState(0);
 
-  // Hook para ler a URL atual e extrair os parâmetros de busca
+  // Uso isso para ver o que tem na URL (ex: ?titulo=Batman)
   const location = useLocation();
 
-  // Escuta a URL para termos de busca
+  // Essa parte roda sempre que a URL muda. Se tiver uma busca lá, eu pego ela.
   useEffect(() => {
     const query = new URLSearchParams(location.search);
-    const termoBuscaURL = query.get('titulo'); // Pega o valor de '?titulo='
+    const termoBuscaURL = query.get('titulo'); 
 
     if (termoBuscaURL) {
-      // Se houver um termo de busca na URL, usa ele
       setBusca(termoBuscaURL);
-      setFiltros(null);  // Limpa filtros
-      setTriggerFetch(t => t + 1); // Força uma nova busca
+      setFiltros(null);  
+      setTriggerFetch(t => t + 1); // Forço a busca a acontecer
     } else if (!busca && !filtros && location.search) {
-      // Caso a URL seja limpa, mas os estados não, garante que a busca seja zerada
       setTriggerFetch(t => t + 1);
     }
-  }, [location.search]);  // Executa sempre que a query string mudar
+  }, [location.search]);
 
-  // Hook para buscar filmes do backend
+  // Aqui é onde eu busco os filmes do meu backend
   useEffect(() => {
     const fetchFilmes = async () => {
       let url = "";
       const params = new URLSearchParams();
 
-      // Adiciona o termo de busca (se houver)
+      // Se tiver busca, adiciono na URL
       if (busca) {
         params.append('titulo', busca);
       }
 
-      // Adiciona os filtros (se houver)
+      // Se tiver filtros (ano, gênero), adiciono também
       if (filtros) {
         if (filtros.generos && filtros.generos.length > 0) {
-          params.append('genero', filtros.generos[0]); // Apenas o primeiro gênero
+          params.append('genero', filtros.generos[0]); 
         }
-        if (filtros.ano) {
-          params.append('ano', filtros.ano);
-        }
-        if (filtros.diretor) {
-          params.append('diretor', filtros.diretor);
-        }
-        if (filtros.atores) {
-          params.append('ator', filtros.atores);
-        }
+        if (filtros.ano) params.append('ano', filtros.ano);
+        if (filtros.diretor) params.append('diretor', filtros.diretor);
+        if (filtros.atores) params.append('ator', filtros.atores);
       }
 
       const queryString = params.toString();
 
+      // Se tiver filtros, uso a rota de buscar. Se não, pego todos.
       if (queryString) {
         url = `http://localhost:8000/filmes/buscar?${queryString}`;
       } else {
-        url = "http://localhost:8000/filmes"; // Se não houver filtros, busca todos os filmes
+        url = "http://localhost:8000/filmes"; 
       }
-
-      console.log("Buscando na URL:", url);
 
       try {
         const response = await fetch(url);
@@ -84,7 +77,7 @@ function TelaFilmes() {
         if (data.length === 0) {
           setErro("Nenhum filme encontrado com esses critérios.");
         } else {
-          setErro(""); // Limpa o erro se encontrar filmes
+          setErro(""); 
         }
 
       } catch (error) {
@@ -95,31 +88,28 @@ function TelaFilmes() {
     };
 
     fetchFilmes();
-  }, [triggerFetch, busca, filtros]); // Recarrega sempre que 'triggerFetch', 'busca' ou 'filtros' mudarem
+  }, [triggerFetch, busca, filtros]);
 
-  // Função para aplicar filtros
+  // Essa função salva os filtros que o usuário escolheu no modal
   const aplicarFiltros = (filtrosSelecionados) => {
     setFiltros(filtrosSelecionados);
-    setBusca("");  // Limpa o campo de busca ao aplicar filtros
-    setTriggerFetch(t => t + 1); // Força a requisição de filmes com filtros aplicados
-    setModalAberto(false); // Fecha o modal de filtros
+    setBusca(""); 
+    setTriggerFetch(t => t + 1); 
+    setModalAberto(false); 
   };
 
-  // Função para buscar filmes ao submeter o formulário de busca
+  // Essa função roda quando eu clico no botão "Buscar" da tela
   const handleBuscar = (e) => {
     e.preventDefault();
-    setFiltros(null);  // Limpa os filtros ao fazer uma busca
-    setTriggerFetch(t => t + 1); // Dispara nova requisição de filmes
+    setFiltros(null);  
+    setTriggerFetch(t => t + 1); 
   };
 
   return (
     <div className="tela-filmes">
       <Header />
 
-      <section
-        className="banner-filme"
-        style={{ backgroundImage: `url(${imagemTitanic})` }}
-      >
+      <section className="banner-filme" style={{ backgroundImage: `url(${imagemTitanic})` }}>
         <div className="overlay"></div>
         <div className="conteudo-banner">
           <h1>TITANIC</h1>
@@ -132,6 +122,7 @@ function TelaFilmes() {
         </div>
       </section>
 
+      {/* Barra de busca e botão de filtro */}
       <section className="filtro-section" aria-label="Busca e filtros de filmes">
         <form className="filtro-container" onSubmit={handleBuscar}>
           <input
@@ -141,14 +132,8 @@ function TelaFilmes() {
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
           />
-          <button type="submit" className="btn-buscar">
-            Buscar
-          </button>
-          <button
-            type="button"
-            className="btn-filtro"
-            onClick={() => setModalAberto(true)}
-          >
+          <button type="submit" className="btn-buscar">Buscar</button>
+          <button type="button" className="btn-filtro" onClick={() => setModalAberto(true)}>
              Filtros
           </button>
         </form>
@@ -157,12 +142,14 @@ function TelaFilmes() {
       {erro && <p className="mensagem-erro" role="alert">{erro}</p>}
 
       <main>
+        {/* Aqui eu mostro os cards dos filmes */}
         <SecaoFilmes 
           titulo={filtros || busca ? "Resultados" : "Todos os Filmes"} 
           filmes={filmes} 
         />
       </main>
 
+      {/* O Modal de filtros que abre por cima da tela */}
       <FiltroModal
         isOpen={modalAberto}
         onClose={() => setModalAberto(false)}

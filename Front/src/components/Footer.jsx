@@ -1,4 +1,5 @@
 import React from "react";
+// Importo ícones prontos da biblioteca react-icons
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import "../style/style_components/Footer.css";
 
@@ -12,6 +13,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-social">
+        {/* Links para as redes sociais com ícones */}
         <a href="https://www.instagram.com" aria-label="Instagram">
           <FaInstagram />
         </a>

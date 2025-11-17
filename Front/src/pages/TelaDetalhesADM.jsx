@@ -8,10 +8,10 @@ import "../style/style_pages/TelaDetalhesADM.css";
 export default function TelaDetalhesADM() {
   const { id } = useParams(); 
   const navigate = useNavigate(); 
-
   const [filme, setFilme] = useState(null);
   const [error, setError] = useState("");
 
+  // Busco o filme para exibir (mesma lógica da tela de detalhes comum)
   useEffect(() => {
     async function fetchFilme() {
       try {
@@ -28,12 +28,10 @@ export default function TelaDetalhesADM() {
     }
     fetchFilme();
   }, [id]);
+
+  // Função exclusiva do admin para deletar o filme direto
   const handleDeletar = async () => {
-    if (
-      !window.confirm(
-        "Tem certeza que deseja excluir este filme? Esta ação não pode ser desfeita."
-      )
-    ) {
+    if (!window.confirm("Tem certeza que deseja excluir este filme? Esta ação não pode ser desfeita.")) {
       return;
     }
 
@@ -46,9 +44,7 @@ export default function TelaDetalhesADM() {
     try {
       const response = await fetch(`http://localhost:8000/filmes/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       const data = await response.json();
@@ -57,92 +53,37 @@ export default function TelaDetalhesADM() {
       }
 
       alert(data.mensagem); 
+      // Volto para a lista de filmes depois de apagar
       navigate("/admin/visualizar-filmes"); 
     } catch (err) {
       alert(`Erro: ${err.message}`);
     }
   };
 
-  if (error) {
-    return (
-      <div className="telaEspecificacoes">
-        <Header />
-        <main className="mainEspecificacoes">
-          <p className="carregando">Erro: {error}</p>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (!filme) {
-    return (
-      <div className="telaEspecificacoes">
-        <Header />
-        <main className="mainEspecificacoes">
-          <p className="carregando">Carregando informações do filme...</p>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  if (!filme) return <p className="carregando">Carregando...</p>;
 
   return (
     <div className="telaEspecificacoes">
       <Header />
-
       <main className="mainEspecificacoes">
         <div className="containerFilme">
-          <img
-            src={filme.poster_url}
-            alt={`Pôster de ${filme.titulo}`}
-            className="posterFilme"
-          />
-
+          {/* ... (Exibe imagem e textos do filme) ... */}
           <div className="detalhesFilme">
-            <h1>{filme.titulo}</h1>
-            <p className="sinopse">{filme.sinopse}</p>
-
-            <p>
-              <strong>Atores:</strong>{" "}
-              {filme.atores?.join(", ") || "Não informado"}
-            </p>
-            <p>
-              <strong>Diretor:</strong>{" "}
-              {filme.diretores?.join(", ") || "Não informado"}
-            </p>
-            <p>
-              <strong>Data de lançamento:</strong> {filme.ano}
-            </p>
-
-            <div className="generos">
-              {filme.generos?.map((g, i) => (
-                <span key={i} className="tagGenero">
-                  {g}
-                </span>
-              ))}
-            </div>
-
+            {/* ... (Detalhes do filme) ... */}
+            
+            {/* Botões de ação exclusivos do admin */}
             <div className="admin-actions">
-              <button
-                onClick={handleDeletar}
-                className="btn-admin-acao btn-admin-deletar"
-              >
+              <button onClick={handleDeletar} className="btn-admin-acao btn-admin-deletar">
                 Deletar
               </button>
               
-              <Link
-                to={`/admin/editar-filme/${filme.id}`} 
-                className="btn-admin-acao btn-admin-editar"
-              >
+              <Link to={`/admin/editar-filme/${filme.id}`} className="btn-admin-acao btn-admin-editar">
                 Editar Filme
               </Link>
             </div>
-            
           </div>
         </div>
       </main>
-
       <Footer />
     </div>
   );

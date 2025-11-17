@@ -5,9 +5,11 @@ import Footer from "../components/Footer";
 import "../style/style_pages/TelaVisualizacaoFilmes.css"; 
 
 export default function TelaDetalhes() {
+  // Pego o ID do filme que está na URL (ex: /filmes/1)
   const { id } = useParams();
   const [filme, setFilme] = useState(null);
 
+  // Busco os detalhes desse filme no backend
   useEffect(() => {
     async function fetchFilme() {
       try {
@@ -21,6 +23,7 @@ export default function TelaDetalhes() {
     fetchFilme();
   }, [id]);
 
+  // Se ainda não carregou, mostro uma mensagem de espera
   if (!filme) {
     return (
       <div className="telaEspecificacoes">
@@ -33,6 +36,7 @@ export default function TelaDetalhes() {
     );
   }
 
+  // Quando carrega, mostro os detalhes do filme
   return (
     <div className="telaEspecificacoes">
       <Header />
@@ -49,15 +53,9 @@ export default function TelaDetalhes() {
             <h1>{filme.titulo}</h1>
             <p className="sinopse">{filme.sinopse}</p>
 
-            <p>
-              <strong>Atores:</strong> {filme.atores?.join(", ") || "Não informado"}
-            </p>
-            <p>
-              <strong>Diretor:</strong> {filme.diretores?.join(", ") || "Não informado"}
-            </p>
-            <p>
-              <strong>Data de lançamento:</strong> {filme.ano}
-            </p>
+            <p><strong>Atores:</strong> {filme.atores?.join(", ") || "Não informado"}</p>
+            <p><strong>Diretor:</strong> {filme.diretores?.join(", ") || "Não informado"}</p>
+            <p><strong>Data de lançamento:</strong> {filme.ano}</p>
 
             <div className="generos">
               {filme.generos?.map((g, i) => (

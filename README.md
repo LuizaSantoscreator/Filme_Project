@@ -28,7 +28,7 @@ Node.js (para o Front-end)
 
 Python (para o Back-end)
 
-[link suspeito removido]
+MySQL (para o Banco de Dados)
 
 ⚙️ Instalação e Configuração
 1. Configuração do Banco de Dados (MySQL)
